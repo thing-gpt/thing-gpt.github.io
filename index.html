@@ -6,8 +6,15 @@
     <button onclick="log_console()">
         View Message
     </button>
+    <button onclick="myFunction()">Try it</button>
+
 </body>
 <script>
+    function myFunction() {
+  var UserInput = document.getElementById("myText").value;
+  document.getElementById("demo").innerHTML = UserInput;
+}
+
 fetch("https://api.aimlapi.com/chat/completions", {
     method: "POST",
     headers: {
@@ -40,7 +47,7 @@ fetch("https://api.aimlapi.com/chat/completions", {
       messages: [
         {
           role: "user",
-          content: "What kind of model are you?",
+          content: UserInput,
         },
       ],
       max_tokens: 512,
