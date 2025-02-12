@@ -1,51 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Response Display</title>
-</head>
+<html>
 <body>
-  <input type="text" id="myText" value="Some text...">
-  <button onclick="log_console()">Try it</button>
-  <p id="demo"></p>
-
-  <script>
-    function log_console() {
-      var UserInput = document.getElementById("myText").value;
-      
-      fetch("https://api.aimlapi.com/chat/completions", {
-          method: "POST",
-          headers: {
-              Authorization: "Bearer f2b3aeb66f7c49a3b1d80c26e8ed38c2",
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-              model: "mistralai/Mistral-7B-Instruct-v0.1",
-              messages: [
-                  {
-                      role: "user",
-                      content: UserInput,
-                  },
-              ],
-              max_tokens: 512,
-              stream: false,
-          }),
-      })
-      .then((res) => res.json())
-      .then((data) => {
-          console.log(data);  // Log the API response to inspect its structure
-          if (data.choices && data.choices.length > 0 && data.choices[0].message) {
-              document.getElementById("demo").innerHTML = data.choices[0].message.content;
-          } else {
-              document.getElementById("demo").innerHTML = "Unexpected API response format";
-          }
-      })
-      .catch((error) => {
-          console.error("Error:", error);
-          document.getElementById("demo").innerHTML = "Error fetching response";
-      });
-    }
-  </script>
+    <script src="https://js.puter.com/v2/"></script>
+    <script>
+        puter.ai.txt2img("A futuristic cityscape at night")
+            .then(imageElement => {
+                document.body.appendChild(imageElement);
+            });
+    </script>
 </body>
 </html>
