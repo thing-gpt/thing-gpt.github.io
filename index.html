@@ -1,62 +1,46 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Response Display</title>
 </head>
 <body>
-    <button onclick="log_console()">
-        View Message
-    </button>
     <input type="text" id="myText" value="Some text...">
     <button onclick="log_console()">Try it</button>
     <p id="demo"></p>
 
+    <script>
+        function log_console() {
+            var UserInput = document.getElementById("myText").value;
+            
+            fetch("https://api.aimlapi.com/chat/completions", {
+                method: "POST",
+                headers: {
+                    Authorization: "Bearer cd9426b445614c378b94e1dd0bcf1068",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    model: "gpt-4o",
+                    messages: [
+                        {
+                            role: "user",
+                            content: UserInput,
+                        },
+                    ],
+                    max_tokens: 512,
+                    stream: false,
+                }),
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                document.getElementById("demo").innerHTML = data.choices[0].message.content;
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                document.getElementById("demo").innerHTML = "Error fetching response";
+            });
+        }
+    </script>
 </body>
-<script>
-    var UserInput = test
-
-
-fetch("https://api.aimlapi.com/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: "cd9426b445614c378b94e1dd0bcf1068",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "user",
-          content: "What kind of model are you?",
-        },
-      ],
-      max_tokens: 512,
-      stream: false,
-    }),
-  })
-    .then((res) => res.json())
-    .then(console.log);
-    function log_console() {
-        var UserInput = document.getElementById("myText").value;
-        document.getElementById("demo").innerHTML = UserInput;
-        fetch("https://api.aimlapi.com/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer cd9426b445614c378b94e1dd0bcf1068",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "user",
-          content: UserInput,
-        },
-      ],
-      max_tokens: 512,
-      stream: false,
-    }),
-  })
-    .then((res) => res.json())
-    .then(console.log);
-    }
-</script>
+</html>
