@@ -2,6 +2,11 @@
 <head>
 
 </head>
+<body>
+    <button onclick="log_console()">
+        View Message
+    </button>
+</body>
 <script>
 fetch("https://api.aimlapi.com/chat/completions", {
     method: "POST",
@@ -23,4 +28,26 @@ fetch("https://api.aimlapi.com/chat/completions", {
   })
     .then((res) => res.json())
     .then(console.log);
+    function log_console() {
+        fetch("https://api.aimlapi.com/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: "cd9426b445614c378b94e1dd0bcf1068",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "user",
+          content: "What kind of model are you?",
+        },
+      ],
+      max_tokens: 512,
+      stream: false,
+    }),
+  })
+    .then((res) => res.json())
+    .then(console.log);
+    }
 </script>
