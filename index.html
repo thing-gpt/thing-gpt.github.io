@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<head>
+
+</head>
+<script>
+fetch("https://api.aimlapi.com/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer my_key",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "user",
+          content: "What kind of model are you?",
+        },
+      ],
+      max_tokens: 512,
+      stream: false,
+    }),
+  })
+    .then((res) => res.json())
+    .then(console.log);
+</script>
