@@ -7,15 +7,13 @@
         View Message
     </button>
     <input type="text" id="myText" value="Some text...">
-    <button onclick="myFunction()">Try it</button>
+    <button onclick="log_console()">Try it</button>
     <p id="demo"></p>
 
 </body>
 <script>
-    function myFunction() {
-  var UserInput = document.getElementById("myText").value;
-  document.getElementById("demo").innerHTML = UserInput;
-}
+    var UserInput = test
+
 
 fetch("https://api.aimlapi.com/chat/completions", {
     method: "POST",
@@ -38,6 +36,8 @@ fetch("https://api.aimlapi.com/chat/completions", {
     .then((res) => res.json())
     .then(console.log);
     function log_console() {
+        var UserInput = document.getElementById("myText").value;
+        document.getElementById("demo").innerHTML = UserInput;
         fetch("https://api.aimlapi.com/chat/completions", {
     method: "POST",
     headers: {
