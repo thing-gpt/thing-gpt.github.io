@@ -11,53 +11,67 @@
 <p id="demo"></p>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const groqApiKey = "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"; // Replace with your actual API key
-        const groq = new Groq({ apiKey: groqApiKey });
+    import Groq from "groq-sdk";
 
-        async function getGroqChatCompletion(userMessage) {
-            try {
-                return await groq.chat.completions.create({
-                    messages: [
-                        {
-                            role: "user",
-                            content: userMessage,
-                        },
-                    ],
-                    model: "llama-3.3-70b-versatile",
-                });
-            } catch (error) {
-                console.error("Error getting chat completion:", error);
-                throw error;
-            }
-        }
+const groq = new Groq();
 
-        async function handleButtonClick() {
-            try {
-                const userMessageElement = document.getElementById('myText');
-                const userMessage = userMessageElement?.value;
-                if (!userMessage) {
-                    throw new Error("User message is empty");
-                }
+export async function main() {
+  const chatCompletion = await getGroqChatCompletion();
+  // Print the completion returned by the LLM.
+  console.log(chatCompletion.choices[0]?.message?.content || "");
+}
 
-                const demoElement = document.getElementById('demo');
-                if (!demoElement) {
-                    throw new Error("Demo element not found");
-                }
+export const getGroqChatCompletion = async () => {
+  return groq.chat.completions.create({
+    //
+    // Required parameters
+    //
+    messages: [
+      // Set an optional system message. This sets the behavior of the
+      // assistant and can be used to provide specific instructions for
+      // how it should behave throughout the conversation.
+      {
+        role: "system",
+        content: "you are a helpful assistant.",
+      },
+      // Set a user message for the assistant to respond to.
+      {
+        role: "user",
+        content: "Explain the importance of fast language models",
+      },
+    ],
 
-                const chatCompletion = await getGroqChatCompletion(userMessage);
-                const completionContent = chatCompletion.choices[0]?.message?.content || "";
-                demoElement.textContent = completionContent;
-            } catch (error) {
-                console.error("Error handling button click:", error);
-                document.getElementById('demo').textContent = `Error: ${error.message}`;
-            }
-        }
+    // The language model which will generate the completion.
+    model: "llama-3.3-70b-versatile",
 
-        // Add an event listener to the button
-        const button = document.getElementById('myButton');
-        button.addEventListener('click', handleButtonClick);
-    });
+    //
+    // Optional parameters
+    //
+
+    // Controls randomness: lowering results in less random completions.
+    // As the temperature approaches zero, the model will become deterministic
+    // and repetitive.
+    temperature: 0.5,
+
+    // The maximum number of tokens to generate. Requests can use up to
+    // 2048 tokens shared between prompt and completion.
+    max_completion_tokens: 1024,
+
+    // Controls diversity via nucleus sampling: 0.5 means half of all
+    // likelihood-weighted options are considered.
+    top_p: 1,
+
+    // A stop sequence is a predefined or user-specified text string that
+    // signals an AI to stop generating content, ensuring its responses
+    // remain focused and concise. Examples include punctuation marks and
+    // markers like "[end]".
+    stop: null,
+
+    // If set, partial message deltas will be sent.
+    stream: false,
+  });
+};
+
 </script>
 
 </body>
