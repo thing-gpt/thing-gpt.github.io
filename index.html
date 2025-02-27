@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Sigma Test</title>
-    <script src="https://cdn.jsdelivr.net/npm/groq-sdk/dist/groq-sdk.min.js"></script>
 </head>
 <body>
 
@@ -12,16 +11,16 @@
 
 <script>
     let groq;
+    let scriptLoaded = false;
 
-    // Wait for the Groq SDK to finish loading
-    (function() {
-        const intervalId = setInterval(() => {
-            if (typeof Groq !== 'undefined') {
-                groq = new Groq();
-                clearInterval(intervalId);
-            }
-        }, 100);
-    })();
+    // Load the Groq SDK
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/groq-sdk/dist/groq-sdk.min.js';
+    script.onload = () => {
+        scriptLoaded = true;
+        groq = new Groq();
+    };
+    document.head.appendChild(script);
 
     async function getGroqChatCompletion(userInput) {
         console.log('Getting chat completion...');
@@ -54,8 +53,12 @@
 
     async function handleButtonClick() {
         console.log('Button clicked!');
+        if (!scriptLoaded) {
+            console.log('Groq SDK not loaded yet. Please try again.');
+            return;
+        }
         if (!groq) {
-            console.error('Groq SDK not loaded yet. Please try again.');
+            console.log('Groq SDK not initialized yet. Please try again.');
             return;
         }
         const userInput = document.getElementById('myText').value;
@@ -67,4 +70,4 @@
 </script>
 
 </body>
-</html>o
+</html>
