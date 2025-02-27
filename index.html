@@ -11,7 +11,17 @@
 <p id="demo"></p>
 
 <script>
-    const groq = new Groq();
+    let groq;
+
+    // Wait for the Groq SDK to finish loading
+    (function() {
+        const intervalId = setInterval(() => {
+            if (typeof Groq !== 'undefined') {
+                groq = new Groq();
+                clearInterval(intervalId);
+            }
+        }, 100);
+    })();
 
     async function getGroqChatCompletion(userInput) {
         console.log('Getting chat completion...');
@@ -44,6 +54,10 @@
 
     async function handleButtonClick() {
         console.log('Button clicked!');
+        if (!groq) {
+            console.error('Groq SDK not loaded yet. Please try again.');
+            return;
+        }
         const userInput = document.getElementById('myText').value;
         console.log('Input value:', userInput);
         const response = await getGroqChatCompletion(userInput);
@@ -53,4 +67,4 @@
 </script>
 
 </body>
-</html>
+</html>o
