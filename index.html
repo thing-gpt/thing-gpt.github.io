@@ -7,7 +7,7 @@
 <body>
 
 <input type="text" id="myText" value="Some text...">
-<button onclick="handleButtonClick()">Try it</button>
+<button id="myButton">Try it</button>
 <p id="demo"></p>
 
 <script>
@@ -53,6 +53,10 @@
                 document.getElementById('demo').textContent = `Error: ${error.message}`;
             }
         }
+
+        // Add an event listener to the button
+        const button = document.getElementById('myButton');
+        button.addEventListener('click', handleButtonClick);
     });
 </script>
 
