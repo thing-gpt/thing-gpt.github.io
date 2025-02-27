@@ -2,37 +2,38 @@
 <html>
 <head>
     <title>Sigma Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/groq-sdk/dist/groq-sdk.min.js"></script>
 </head>
 <body>
-
-<script>
-    import Groq from "groq-sdk";
-    GROQ_API_KEY = "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"
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-    async function getGroqChatCompletion(userMessage) {
-        return groq.chat.completions.create({
-            messages: [
-                {
-                    role: "user",
-                    content: userMessage,
-                },
-            ],
-            model: "llama-3.3-70b-versatile",
-        });
-    }
-
-    async function handleButtonClick() {
-        const userMessage = document.getElementById('myText').value;
-        const chatCompletion = await getGroqChatCompletion(userMessage);
-        // Print the completion returned by the LLM.
-        document.getElementById('demo').textContent = chatCompletion.choices[0]?.message?.content || "";
-    }
-</script>
 
 <input type="text" id="myText" value="Some text...">
 <button onclick="handleButtonClick()">Try it</button>
 <p id="demo"></p>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const groq = new Groq({ apiKey: "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" }); // Replace with your actual API key
+
+        async function getGroqChatCompletion(userMessage) {
+            return groq.chat.completions.create({
+                messages: [
+                    {
+                        role: "user",
+                        content: userMessage,
+                    },
+                ],
+                model: "llama-3.3-70b-versatile",
+            });
+        }
+
+        async function handleButtonClick() {
+            const userMessage = document.getElementById('myText').value;
+            const chatCompletion = await getGroqChatCompletion(userMessage);
+            // Print the completion returned by the LLM.
+            document.getElementById('demo').textContent = chatCompletion.choices[0]?.message?.content || "";
+        }
+    });
+</script>
 
 </body>
 </html>
