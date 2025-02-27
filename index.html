@@ -6,7 +6,7 @@
 <body>
 
 <input type="text" id="myText" value="Some text...">
-<button id="myButton" onclick="handleButtonClick()">Try it</button>
+<button id="myButton">Try it</button>
 <p id="demo"></p>
 
 <script>
@@ -51,14 +51,23 @@
         }
     }
 
-    async function handleButtonClick() {
+    async function waitUntilLoaded() {
+        return new Promise(resolve => {
+            if (scriptLoaded) {
+                resolve();
+            } else {
+                setTimeout(() => {
+                    waitUntilLoaded().then(resolve);
+                }, 100);
+            }
+        });
+    }
+
+    document.getElementById('myButton').addEventListener('click', async () => {
         console.log('Button clicked!');
-        if (!scriptLoaded) {
-            console.log('Groq SDK not loaded yet. Please try again.');
-            return;
-        }
+        await waitUntilLoaded();
         if (!groq) {
-            console.log('Groq SDK not initialized yet. Please try again.');
+            console.log('Groq SDK not initialized yet.');
             return;
         }
         const userInput = document.getElementById('myText').value;
@@ -66,7 +75,7 @@
         const response = await getGroqChatCompletion(userInput);
         console.log('Response:', response);
         document.getElementById('demo').innerHTML = response;
-    }
+    });
 </script>
 
 </body>
