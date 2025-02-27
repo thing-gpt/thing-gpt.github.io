@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 <head>
     <title>Sigma Test</title>
 </head>
@@ -7,30 +8,30 @@
 <script>
     import Groq from "groq-sdk";
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-export async function main() {
-  const chatCompletion = await getGroqChatCompletion();
-  // Print the completion returned by the LLM.
-  console.log(chatCompletion.choices[0]?.message?.content || "");
-}
+    async function getGroqChatCompletion(message) {
+        return groq.chat.completions.create({
+            messages: [
+                {
+                    role: "user",
+                    content: message,
+                },
+            ],
+            model: "llama-3.3-70b-versatile",
+        });
+    }
 
-export async function getGroqChatCompletion() {
-  return groq.chat.completions.create({
-    messages: [
-      {
-        role: "user",
-        content: "Explain the importance of fast language models",
-      },
-    ],
-    model: "llama-3.3-70b-versatile",
-  });
-}
-
+    async function handleButtonClick() {
+        const userInput = document.getElementById("myText").value;
+        const chatCompletion = await getGroqChatCompletion(userInput);
+        document.getElementById("demo").innerText = chatCompletion.choices[0]?.message?.content || "No response";
+    }
 </script>
 
-<input type="text" id="myText" value="Some text...">
-<button onclick="getGroqChatCompletion()">Try it</button>
+<input type="text" id="myText" value="Explain the importance of fast language models...">
+<button onclick="handleButtonClick()">Try it</button>
 <p id="demo"></p>
 
 </body>
+</html>
