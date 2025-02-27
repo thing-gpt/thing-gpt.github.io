@@ -5,7 +5,8 @@
 </head>
 <body>
 
-<input type="text" id="myText" value="Some text...">
+<input type="text" id="myText" value="Some text..." placeholder="Enter your text...">
+<input type="text" id="apiKey" value="" placeholder="Enter your API key...">
 <button id="myButton">Try it</button>
 <p id="demo"></p>
 
@@ -22,7 +23,7 @@
     };
     document.head.appendChild(script);
 
-    async function getGroqChatCompletion(userInput) {
+    async function getGroqChatCompletion(userInput, apiKey) {
         console.log('Getting chat completion...');
         try {
             const response = await groq.chat.completions.create({
@@ -42,6 +43,10 @@
                 top_p: 1,
                 stop: null,
                 stream: false,
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${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}`
+                }
             });
             console.log('Response received:', response);
             return response.choices[0]?.message?.content || "";
@@ -71,8 +76,10 @@
             return;
         }
         const userInput = document.getElementById('myText').value;
+        const apiKey = document.getElementById('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').value;
         console.log('Input value:', userInput);
-        const response = await getGroqChatCompletion(userInput);
+        console.log('API key:', apiKey);
+        const response = await getGroqChatCompletion(userInput, apiKey);
         console.log('Response:', response);
         document.getElementById('demo').innerHTML = response;
     });
