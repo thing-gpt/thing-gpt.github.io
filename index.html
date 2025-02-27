@@ -10,12 +10,12 @@
 
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-    async function getGroqChatCompletion(message) {
+    async function getGroqChatCompletion(userMessage) {
         return groq.chat.completions.create({
             messages: [
                 {
                     role: "user",
-                    content: message,
+                    content: userMessage,
                 },
             ],
             model: "llama-3.3-70b-versatile",
@@ -23,13 +23,14 @@
     }
 
     async function handleButtonClick() {
-        const userInput = document.getElementById("myText").value;
-        const chatCompletion = await getGroqChatCompletion(userInput);
-        document.getElementById("demo").innerText = chatCompletion.choices[0]?.message?.content || "No response";
+        const userMessage = document.getElementById('myText').value;
+        const chatCompletion = await getGroqChatCompletion(userMessage);
+        // Print the completion returned by the LLM.
+        document.getElementById('demo').textContent = chatCompletion.choices[0]?.message?.content || "";
     }
 </script>
 
-<input type="text" id="myText" value="Explain the importance of fast language models...">
+<input type="text" id="myText" value="Some text...">
 <button onclick="handleButtonClick()">Try it</button>
 <p id="demo"></p>
 
