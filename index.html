@@ -7,13 +7,14 @@
 <body>
 
 <input type="text" id="myText" value="Some text...">
-<button id="myButton">Try it</button>
+<button id="myButton" onclick="handleButtonClick()">Try it</button>
 <p id="demo"></p>
 
 <script>
     const groq = new Groq();
 
     async function getGroqChatCompletion(userInput) {
+        console.log('Getting chat completion...');
         try {
             const response = await groq.chat.completions.create({
                 messages: [
@@ -33,6 +34,7 @@
                 stop: null,
                 stream: false,
             });
+            console.log('Response received:', response);
             return response.choices[0]?.message?.content || "";
         } catch (error) {
             console.error("Error:", error);
@@ -40,16 +42,14 @@
         }
     }
 
-    function handleButtonClick() {
+    async function handleButtonClick() {
+        console.log('Button clicked!');
         const userInput = document.getElementById('myText').value;
-        console.log(`Button clicked, input value: ${userInput}`);
-        getGroqChatCompletion(userInput).then(response => {
-            console.log(`Response received: ${response}`);
-            document.getElementById('demo').innerHTML = response;
-        });
+        console.log('Input value:', userInput);
+        const response = await getGroqChatCompletion(userInput);
+        console.log('Response:', response);
+        document.getElementById('demo').innerHTML = response;
     }
-
-    document.getElementById('myButton').onclick = handleButtonClick;
 </script>
 
 </body>
