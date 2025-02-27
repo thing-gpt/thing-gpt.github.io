@@ -7,7 +7,7 @@
 
 <script>
     import Groq from "groq-sdk";
-
+    GROQ_API_KEY = "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"
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
     async function getGroqChatCompletion(userMessage) {
