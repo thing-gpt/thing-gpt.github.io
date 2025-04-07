@@ -1,34 +1,46 @@
+<!DOCTYPE html>
 <html>
 <body>
-<input type="text" id="myText" value="Some text..." placeholder="Enter your text...">
-<input type="text" id="apiKey" value="" placeholder="Enter your API key...">
-<button id="myButton">Try it</button>
-<p id="demo"></p>
+  <input type="text" id="myText" value="Some text..." placeholder="Enter your text...">
+  <input type="text" id="apiKey" placeholder="Enter your API key...">
+  <button id="myButton">Try it</button>
+  <p id="demo"></p>
 
-<script>
-   import Groq from "groq-sdk";
+  <script type="module">
+    import Groq from "https://esm.sh/groq-sdk"; // Use browser-friendly import
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+    document.getElementById('myButton').addEventListener('click', async () => {
+      const userText = document.getElementById('myText').value;
+      const apiKey = document.getElementById('apiKey').value;
 
-document.getElementById('myButton').addEventListener('click', async () => {
-  const chatCompletion = await getGroqChatCompletion();
-  // Print the completion returned by the LLM.
-  console.log(chatCompletion.choices[0]?.message?.content || "");
-});
+      if (!apiKey) {
+        document.getElementById('demo').textContent = "Please enter your API key.";
+        return;
+      }
 
-export async function getGroqChatCompletion() {
-  return groq.chat.completions.create({
-    messages: [
-      {
-        role: "user",
-        content: "Explain the importance of fast language models",
-      },
-    ],
-    model: "llama-3.3-70b-versatile",
-  });
-}
+      const groq = new Groq({ apiKey });
 
-</script>
+      try {
+        const result = await getGroqChatCompletion(groq, userText);
+        const content = result.choices[0]?.message?.content || "No response.";
+        document.getElementById('demo').textContent = content;
+      } catch (error) {
+        console.error(error);
+        document.getElementById('demo').textContent = "Error fetching response.";
+      }
+    });
 
+    async function getGroqChatCompletion(groq, prompt) {
+      return groq.chat.completions.create({
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        model: "llama-3-70b-8192",
+      });
+    }
+  </script>
 </body>
 </html>
