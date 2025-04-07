@@ -11,78 +11,28 @@
 <p id="demo"></p>
 
 <script>
-    let groq;
-    let scriptLoaded = false;
+   import Groq from "groq-sdk";
 
-    // Load the Groq SDK
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/groq-sdk/dist/groq-sdk.min.js';
-    script.onload = () => {
-        scriptLoaded = true;
-        groq = new Groq();
-    };
-    document.head.appendChild(script);
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-    async function getGroqChatCompletion(userInput, apiKey) {
-        console.log('Getting chat completion...');
-        try {
-            const response = await groq.chat.completions.create({
-                messages: [
-                    {
-                        role: "system",
-                        content: "you are a helpful assistant.",
-                    },
-                    {
-                        role: "user",
-                        content: userInput,
-                    },
-                ],
-                model: "llama-3.3-70b-versatile",
-                temperature: 0.5,
-                max_completion_tokens: 1024,
-                top_p: 1,
-                stop: null,
-                stream: false,
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${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}`
-                }
-            });
-            console.log('Response received:', response);
-            return response.choices[0]?.message?.content || "";
-        } catch (error) {
-            console.error("Error:", error);
-            return "An error occurred.";
-        }
-    }
+export async function main() {
+  const chatCompletion = await getGroqChatCompletion();
+  // Print the completion returned by the LLM.
+  console.log(chatCompletion.choices[0]?.message?.content || "");
+}
 
-    async function waitUntilLoaded() {
-        return new Promise(resolve => {
-            if (scriptLoaded) {
-                resolve();
-            } else {
-                setTimeout(() => {
-                    waitUntilLoaded().then(resolve);
-                }, 100);
-            }
-        });
-    }
+export async function getGroqChatCompletion() {
+  return groq.chat.completions.create({
+    messages: [
+      {
+        role: "user",
+        content: "Explain the importance of fast language models",
+      },
+    ],
+    model: "llama-3.3-70b-versatile",
+  });
+}
 
-    document.getElementById('myButton').addEventListener('click', async () => {
-        console.log('Button clicked!');
-        await waitUntilLoaded();
-        if (!groq) {
-            console.log('Groq SDK not initialized yet.');
-            return;
-        }
-        const userInput = document.getElementById('myText').value;
-        const apiKey = document.getElementById('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').value;
-        console.log('Input value:', userInput);
-        console.log('API key:', apiKey);
-        const response = await getGroqChatCompletion(userInput, apiKey);
-        console.log('Response:', response);
-        document.getElementById('demo').innerHTML = response;
-    });
 </script>
 
 </body>
