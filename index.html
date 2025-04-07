@@ -18,7 +18,7 @@
         return;
       }
 
-      const groq = new Groq({ apiKey });
+      const groq = new Groq({ apiKey, dangerouslyAllowBrowser : true });
 
       try {
         const result = await getGroqChatCompletion(groq, userText);
