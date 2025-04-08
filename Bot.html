@@ -118,7 +118,7 @@
   <!-- Input Section below chat window -->
   <div class="input-section">
     <input type="text" id="apiKey" placeholder="Enter API Key..." value="">
-    <input type="text" id="myText" placeholder="Type a message...">
+    <input type="text" id="myText" placeholder="Type a message..." onkeydown="enter()">
     <button id="sendBtn">Send</button>
   </div>
 
@@ -140,6 +140,9 @@
     // Load previous chat history
     renderHistory(conversationHistory);
 
+    if(event.keyCode == 13) {
+      sendBtn
+    }
     // Apply the AI prompt (update the prompt and clear chat history)
     applyPromptBtn.addEventListener("click", () => {
       aiPrompt = promptInput.value.trim();
