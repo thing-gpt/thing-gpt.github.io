@@ -1,2 +1,3 @@
 # thing-gpt.github.io
-sigma
+pretty much just a testing ground for making ai clones or something
+go away
