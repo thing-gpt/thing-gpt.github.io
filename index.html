@@ -2,7 +2,7 @@
 <html>
 <body>
   <input type="text" id="myText" value="Some text..." placeholder="Enter your text...">
-  <input type="text" id="apiKey" placeholder="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">
+  <input type="text" id="apiKey" placeholder="i hate this">
   <button id="myButton">Try it</button>
   <p id="demo"></p>
 
@@ -11,13 +11,13 @@
 
     document.getElementById('myButton').addEventListener('click', async () => {
       const userText = document.getElementById('myText').value;
-      const apiKey = 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;
+      const apiKey = document.getElementById('apiKey').value;
 
       if (!apiKey) {
         document.getElementById('demo').textContent = "Please enter your API key.";
         return;
       }
-      
+
       const groq = new Groq({ apiKey, dangerouslyAllowBrowser : true });
 
       try {
