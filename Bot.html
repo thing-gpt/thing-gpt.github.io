@@ -127,6 +127,7 @@
   </div>
 
   <script type="module">
+    //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
     import Groq from "https://esm.sh/groq-sdk";
   
     const chatWindow = document.getElementById("chatWindow");
@@ -136,7 +137,7 @@
     const clearBtn = document.getElementById("clearBtn");
     const applyPromptBtn = document.getElementById("applyPromptBtn");
     const promptInput = document.getElementById("promptInput");
-  
+    
     let conversationHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
     let aiPrompt = localStorage.getItem("aiPrompt") || "";
   
