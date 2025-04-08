@@ -140,8 +140,10 @@
     // Load previous chat history
     renderHistory(conversationHistory);
 
-    if(event.keyCode == 13) {
-      sendBtn
+    function search() {
+      if(event.keyCode == 13) {
+        sendBtn
+      }
     }
     // Apply the AI prompt (update the prompt and clear chat history)
     applyPromptBtn.addEventListener("click", () => {
