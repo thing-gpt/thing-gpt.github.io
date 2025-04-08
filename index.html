@@ -1,80 +1,144 @@
-<input type="text" id="myText" placeholder="Say something...">
-<input type="text" id="apiKey" value="gsk_..." placeholder="API Key">
-<button id="sendBtn">Send</button>
-
-<div id="chatWindow"></div>
-
-<script type="module">
-  import Groq from "https://esm.sh/groq-sdk";
-
-  const chatWindow = document.getElementById("chatWindow");
-  let conversationHistory = [];
-
-  document.getElementById("sendBtn").addEventListener("click", async () => {
-    const userText = document.getElementById("myText").value;
-    const apiKey = document.getElementById("apiKey").value;
-    if (!userText || !apiKey) return;
-
-    // Add user message to history + UI
-    conversationHistory.push({ role: "user", content: userText });
-    chatWindow.appendChild(createMessage("user", userText));
-
-    const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
-
-    try {
-      const result = await groq.chat.completions.create({
-        messages: conversationHistory,
-        model: "qwen-2.5-32b",
-      });
-
-      const aiResponse = result.choices[0]?.message?.content || "No response.";
-      conversationHistory.push({ role: "assistant", content: aiResponse });
-
-      // Add assistant message to UI
-      chatWindow.appendChild(createMessage("assistant", aiResponse));
-
-      // Scroll to bottom
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    } catch (err) {
-      console.error(err);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Persistent Chat</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 16px;
     }
-  });
 
-  function createMessage(role, content) {
-    const msg = document.createElement("div");
-    msg.className = role === "user" ? "user-bubble" : "ai-bubble";
-    msg.textContent = content;
-    return msg;
-  }
-</script>
+    #chatWindow {
+      border: 1px solid #ccc;
+      padding: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
 
-<style>
-  #chatWindow {
-    border: 1px solid #ccc;
-    padding: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 10px;
-  }
+    .user-bubble {
+      align-self: flex-end;
+      background: #007bff;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 16px;
+      max-width: 75%;
+    }
 
-  .user-bubble {
-    align-self: flex-end;
-    background: #007bff;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 16px;
-    max-width: 70%;
-  }
+    .ai-bubble {
+      align-self: flex-start;
+      background: #e0e0e0;
+      color: black;
+      padding: 8px 12px;
+      border-radius: 16px;
+      max-width: 75%;
+    }
 
-  .ai-bubble {
-    align-self: flex-start;
-    background: #f1f1f1;
-    color: black;
-    padding: 8px 12px;
-    border-radius: 16px;
-    max-width: 70%;
-  }
-</style>
+    #myText, #apiKey {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      background-color: #28a745;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <h2>Persistent Chat</h2>
+
+  <input type="text" id="apiKey" placeholder="Enter API Key..." value="">
+  <div id="chatWindow"></div>
+
+  <input type="text" id="myText" placeholder="Type a message...">
+  <button id="sendBtn">Send</button>
+  <button id="clearBtn" style="background:#dc3545; margin-left: 10px;">Clear Chat</button>
+
+  <script type="module">
+    import Groq from "https://esm.sh/groq-sdk";
+
+    const chatWindow = document.getElementById("chatWindow");
+    const inputField = document.getElementById("myText");
+    const apiKeyInput = document.getElementById("apiKey");
+    const sendBtn = document.getElementById("sendBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    // Load chat history from localStorage
+    let conversationHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
+    renderHistory(conversationHistory);
+
+    sendBtn.addEventListener("click", async () => {
+      const userText = inputField.value.trim();
+      const apiKey = apiKeyInput.value.trim();
+      if (!userText || !apiKey) return;
+
+      // Display + store user message
+      addMessage("user", userText);
+
+      const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
+
+      try {
+        const result = await groq.chat.completions.create({
+          messages: conversationHistory,
+          model: "qwen-2.5-32b",
+        });
+
+        const aiResponse = result.choices[0]?.message?.content || "No response.";
+        addMessage("assistant", aiResponse);
+      } catch (err) {
+        console.error(err);
+        addMessage("assistant", "[Error getting response]");
+      }
+
+      inputField.value = "";
+    });
+
+    clearBtn.addEventListener("click", () => {
+      localStorage.removeItem("chatHistory");
+      conversationHistory = [];
+      chatWindow.innerHTML = "";
+    });
+
+    function addMessage(role, content) {
+      const msg = { role, content };
+      conversationHistory.push(msg);
+      localStorage.setItem("chatHistory", JSON.stringify(conversationHistory));
+      chatWindow.appendChild(createMessageBubble(msg));
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function renderHistory(history) {
+      history.forEach(msg => {
+        chatWindow.appendChild(createMessageBubble(msg));
+      });
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function createMessageBubble({ role, content }) {
+      const div = document.createElement("div");
+      div.className = role === "user" ? "user-bubble" : "ai-bubble";
+      div.textContent = content;
+      return div;
+    }
+  </script>
+</body>
+</html>
