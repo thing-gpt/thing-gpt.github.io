@@ -1,59 +1,80 @@
-<!DOCTYPE html>
-<html>
-  <body>
-    <input type="text" id="myText" placeholder="Enter your text...">
-    <input type="text" id="apiKey" value="gsk_..." placeholder="Enter your API key">
-    <button id="myButton">Try it</button>
-    <p id="userMessage"></p>
-    <p id="demo"></p>
+<input type="text" id="myText" placeholder="Say something...">
+<input type="text" id="apiKey" value="gsk_..." placeholder="API Key">
+<button id="sendBtn">Send</button>
 
-    <script type="module">
-      import Groq from "https://esm.sh/groq-sdk";
+<div id="chatWindow"></div>
 
-      // Load from localStorage if available
-      let conversationHistory = [];
-      const stored = localStorage.getItem("chatHistory");
-      if (stored) {
-        try {
-          conversationHistory = JSON.parse(stored);
-        } catch (err) {
-          console.error("Failed to parse stored chat history");
-        }
-      }
+<script type="module">
+  import Groq from "https://esm.sh/groq-sdk";
 
-      document.getElementById("myButton").addEventListener("click", async () => {
-        const userText = document.getElementById("myText").value;
-        const apiKey = document.getElementById("apiKey").value;
+  const chatWindow = document.getElementById("chatWindow");
+  let conversationHistory = [];
 
-        if (!apiKey) {
-          document.getElementById("demo").textContent = "Please enter your API key.";
-          return;
-        }
+  document.getElementById("sendBtn").addEventListener("click", async () => {
+    const userText = document.getElementById("myText").value;
+    const apiKey = document.getElementById("apiKey").value;
+    if (!userText || !apiKey) return;
 
-        conversationHistory.push({ role: "user", content: userText });
+    // Add user message to history + UI
+    conversationHistory.push({ role: "user", content: userText });
+    chatWindow.appendChild(createMessage("user", userText));
 
-        const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
+    const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
 
-        try {
-          const result = await groq.chat.completions.create({
-            messages: conversationHistory,
-            model: "qwen-2.5-32b",
-          });
-
-          const response = result.choices[0]?.message?.content || "No response.";
-          conversationHistory.push({ role: "assistant", content: response });
-
-          // Save to localStorage thanks chatgpt
-          localStorage.setItem("chatHistory", JSON.stringify(conversationHistory));
-
-          document.getElementById("demo").textContent = response;
-        } catch (error) {
-          console.error(error);
-          document.getElementById("demo").textContent = "Error fetching response.";
-        }
+    try {
+      const result = await groq.chat.completions.create({
+        messages: conversationHistory,
+        model: "qwen-2.5-32b",
       });
-      document.getElementById('userMessage').textContent = userText;
 
-    </script>
-  </body>
-</html>
+      const aiResponse = result.choices[0]?.message?.content || "No response.";
+      conversationHistory.push({ role: "assistant", content: aiResponse });
+
+      // Add assistant message to UI
+      chatWindow.appendChild(createMessage("assistant", aiResponse));
+
+      // Scroll to bottom
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
+  function createMessage(role, content) {
+    const msg = document.createElement("div");
+    msg.className = role === "user" ? "user-bubble" : "ai-bubble";
+    msg.textContent = content;
+    return msg;
+  }
+</script>
+
+<style>
+  #chatWindow {
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .user-bubble {
+    align-self: flex-end;
+    background: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 16px;
+    max-width: 70%;
+  }
+
+  .ai-bubble {
+    align-self: flex-start;
+    background: #f1f1f1;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 16px;
+    max-width: 70%;
+  }
+</style>
