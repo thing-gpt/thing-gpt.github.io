@@ -15,6 +15,7 @@
       flex-wrap: wrap;
     }
 
+    /* Chat window styles */
     #chatWindow {
       border: 1px solid #ccc;
       padding: 10px;
@@ -49,6 +50,18 @@
       max-width: 75%;
     }
 
+    /* Side panel for prompt */
+    .side-panel {
+      width: 300px; /* Fixed width for side panel */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    /* Input and button styles */
     #myText, #apiKey, #promptInput {
       width: 100%;
       padding: 8px;
@@ -70,33 +83,34 @@
       background-color: #218838;
     }
 
-    .side-panel {
-      width: 300px; /* A fixed width for the side panel */
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-
-    .side-panel input, .side-panel button {
-      margin-bottom: 10px;
-      width: 100%;
-    }
-
+    /* Styling for Clear Chat button */
     .clear-btn {
       background-color: #dc3545;
     }
+
+    /* Input fields at the bottom */
+    .input-section {
+      width: 100%;
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input-section input,
+    .input-section button {
+      width: 48%; /* To ensure both inputs fit in row */
+    }
+
   </style>
 </head>
 <body>
   <h2>Test Chat</h2>
 
-  <!-- Chat Window -->
+  <!-- Main Chat Section -->
   <div id="chatWindow"></div>
 
-  <!-- Side Panel with Prompt -->
+  <!-- Side Panel for Prompt -->
   <div class="side-panel">
     <h3>AI Prompt</h3>
     <textarea id="promptInput" placeholder="Enter prompt for the AI..."></textarea>
@@ -104,8 +118,8 @@
     <button id="clearBtn" class="clear-btn">Clear Chat</button>
   </div>
 
-  <!-- Input Section -->
-  <div style="width: 100%; margin-top: 20px;">
+  <!-- Input Section below chat window -->
+  <div class="input-section">
     <input type="text" id="apiKey" placeholder="Enter API Key..." value="">
     <input type="text" id="myText" placeholder="Type a message...">
     <button id="sendBtn">Send</button>
