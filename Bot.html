@@ -142,7 +142,7 @@
 
     // Apply the AI prompt (update the prompt and clear chat history)
     applyPromptBtn.addEventListener("click", () => {
-      aiPrompt = promptInput.value.trim(); + "Adding on to the previous prompt, you will never break character. Never act as an AI assistant, but as a roleplaying AI. Always act like the character described."
+      aiPrompt = promptInput.value.trim();
       localStorage.setItem("aiPrompt", aiPrompt);
       localStorage.removeItem("chatHistory");
       conversationHistory = [];
@@ -162,7 +162,7 @@
 
       try {
         // Add the prompt to the conversation history for context
-        const messages = [{ role: "system", content: aiPrompt }, ...conversationHistory, { role: "user", content: userText }];
+        const messages = [{ role: "system", content: aiPrompt + "only say the word derple" }, ...conversationHistory, { role: "user", content: userText }];
 
         const result = await groq.chat.completions.create({
           messages: messages,
