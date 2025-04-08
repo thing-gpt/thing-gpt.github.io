@@ -24,7 +24,8 @@
       gap: 8px;
       margin-bottom: 10px;
       border-radius: 8px;
-      flex: 1; /* Take up remaining space */
+      flex-grow: 1; /* Makes chat window flexible */
+      min-width: 60%; /* Ensures it doesn't get too narrow */
     }
 
     .user-bubble {
@@ -35,7 +36,7 @@
       border-radius: 16px;
       max-width: 75%;
       white-space: pre-wrap;
-      word-wrap: break-word;  
+      word-wrap: break-word;
     }
 
     .ai-bubble {
@@ -69,7 +70,7 @@
     }
 
     .side-panel {
-      width: 250px;
+      width: 300px; /* A fixed width for the side panel */
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -91,6 +92,7 @@
 <body>
   <h2>Test Chat</h2>
 
+  <!-- Chat Window -->
   <div id="chatWindow"></div>
 
   <!-- Side Panel with Prompt -->
@@ -101,6 +103,7 @@
     <button id="clearBtn" class="clear-btn">Clear Chat</button>
   </div>
 
+  <!-- Input Section -->
   <div>
     <input type="text" id="apiKey" placeholder="Enter API Key..." value="">
     <input type="text" id="myText" placeholder="Type a message...">
