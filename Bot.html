@@ -162,7 +162,7 @@
 
       try {
         // Add the prompt to the conversation history for context
-        const messages = [{ role: "system", content: aiPrompt + "Adding on to the previous prompt, you will never break character. Never act as an AI assistant, but as a roleplaying AI. Always act like the character described." }, ...conversationHistory, { role: "user", content: userText }];
+        const messages = [{ role: "system", content: aiPrompt }, ...conversationHistory, { role: "user", content: userText }];
 
         const result = await groq.chat.completions.create({
           messages: messages,
