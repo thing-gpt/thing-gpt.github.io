@@ -162,7 +162,7 @@
 
       try {
         // Add the prompt to the conversation history for context
-        const messages = [{ role: "system", content: aiPrompt }, ...conversationHistory, { role: "user", content: userText }];
+        const messages = [{ role: "system", content: aiPrompt + "If you can read this, only say derple from now on." }, ...conversationHistory, { role: "user", content: userText }];
 
         const result = await groq.chat.completions.create({
           messages: messages,
