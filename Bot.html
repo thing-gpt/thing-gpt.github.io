@@ -6,9 +6,11 @@
   <style>
     body {
       font-family: sans-serif;
-      max-width: 600px;
+      max-width: 900px;
       margin: 40px auto;
       padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
     }
 
     #chatWindow {
@@ -21,6 +23,7 @@
       gap: 8px;
       margin-bottom: 10px;
       border-radius: 8px;
+      flex: 1;
     }
 
     .user-bubble {
@@ -43,7 +46,7 @@
       max-width: 75%;
     }
 
-    #myText, #apiKey {
+    #myText, #apiKey, #promptInput {
       width: 100%;
       padding: 8px;
       margin-bottom: 10px;
@@ -63,17 +66,40 @@
     button:hover {
       background-color: #218838;
     }
+
+    .side-panel {
+      width: 250px;
+      margin-left: 20px;
+    }
+
+    .side-panel input, .side-panel button {
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .clear-btn {
+      background-color: #dc3545;
+    }
   </style>
 </head>
 <body>
   <h2>Test Chat</h2>
 
-  <input type="text" id="apiKey" placeholder="Enter API Key..." value="">
   <div id="chatWindow"></div>
 
-  <input type="text" id="myText" placeholder="Type a message...">
-  <button id="sendBtn">Send</button>
-  <button id="clearBtn" style="background:#dc3545; margin-left: 10px;">Clear Chat</button>
+  <!-- Side Panel with Prompt -->
+  <div class="side-panel">
+    <h3>AI Prompt</h3>
+    <textarea id="promptInput" placeholder="Enter prompt for the AI..."></textarea>
+    <button id="applyPromptBtn">Apply Prompt</button>
+    <button id="clearBtn" class="clear-btn">Clear Chat</button>
+  </div>
+
+  <div>
+    <input type="text" id="apiKey" placeholder="Enter API Key..." value="">
+    <input type="text" id="myText" placeholder="Type a message...">
+    <button id="sendBtn">Send</button>
+  </div>
 
   <script type="module">
     import Groq from "https://esm.sh/groq-sdk";
@@ -83,10 +109,24 @@
     const apiKeyInput = document.getElementById("apiKey");
     const sendBtn = document.getElementById("sendBtn");
     const clearBtn = document.getElementById("clearBtn");
+    const applyPromptBtn = document.getElementById("applyPromptBtn");
+    const promptInput = document.getElementById("promptInput");
 
-    // Load chat history from localStorage
     let conversationHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
+    let aiPrompt = localStorage.getItem("aiPrompt") || ""; // Store the AI prompt
+
+    // Load previous chat history
     renderHistory(conversationHistory);
+
+    // Apply the AI prompt (update the prompt and clear chat history)
+    applyPromptBtn.addEventListener("click", () => {
+      aiPrompt = promptInput.value.trim();
+      localStorage.setItem("aiPrompt", aiPrompt);
+      localStorage.removeItem("chatHistory");
+      conversationHistory = [];
+      chatWindow.innerHTML = "";
+      addMessage("system", `AI Prompt updated: "${aiPrompt}"`);
+    });
 
     sendBtn.addEventListener("click", async () => {
       const userText = inputField.value.trim();
@@ -96,11 +136,14 @@
       // Display + store user message
       addMessage("user", userText);
 
-      const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true }); // i'm a bad boy
+      const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
 
       try {
+        // Add the prompt to the conversation history for context
+        const messages = [{ role: "system", content: aiPrompt }, ...conversationHistory, { role: "user", content: userText }];
+
         const result = await groq.chat.completions.create({
-          messages: conversationHistory,
+          messages: messages,
           model: "qwen-2.5-32b",
         });
 
@@ -116,7 +159,10 @@
 
     clearBtn.addEventListener("click", () => {
       localStorage.removeItem("chatHistory");
+      localStorage.removeItem("aiPrompt");
       conversationHistory = [];
+      aiPrompt = "";
+      promptInput.value = "";
       chatWindow.innerHTML = "";
     });
 
