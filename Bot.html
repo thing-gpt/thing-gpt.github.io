@@ -6,28 +6,27 @@
   <style>
     body {
       font-family: sans-serif;
-      max-width: 900px;
       margin: 40px auto;
       padding: 0 16px;
+      max-width: 1200px;
       display: flex;
       justify-content: space-between;
-      gap: 20px; /* Space between chat and side panel */
-      flex-wrap: wrap;
+      gap: 20px;
     }
 
     /* Chat window styles */
     #chatWindow {
       border: 1px solid #ccc;
       padding: 10px;
-      max-height: 400px;
+      max-height: 500px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin-bottom: 10px;
       border-radius: 8px;
-      flex-grow: 1; /* Makes chat window flexible */
-      min-width: 60%; /* Ensures it doesn't get too narrow */
+      flex-grow: 1;
+      width: 65%;
     }
 
     .user-bubble {
@@ -52,7 +51,7 @@
 
     /* Side panel for prompt */
     .side-panel {
-      width: 300px; /* Fixed width for side panel */
+      width: 300px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -61,7 +60,7 @@
       border-radius: 8px;
     }
 
-    /* Input and button styles */
+    /* Input fields and buttons styling */
     #myText, #apiKey, #promptInput {
       width: 100%;
       padding: 8px;
@@ -83,23 +82,21 @@
       background-color: #218838;
     }
 
-    /* Styling for Clear Chat button */
     .clear-btn {
       background-color: #dc3545;
     }
 
-    /* Input fields at the bottom */
+    /* Styling for input section under chat */
     .input-section {
       width: 100%;
-      margin-top: 20px;
       display: flex;
       gap: 10px;
-      flex-wrap: wrap;
+      margin-top: 10px;
     }
 
     .input-section input,
     .input-section button {
-      width: 48%; /* To ensure both inputs fit in row */
+      width: 48%;
     }
 
   </style>
