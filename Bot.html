@@ -142,7 +142,7 @@
 
     // Apply the AI prompt (update the prompt and clear chat history)
     applyPromptBtn.addEventListener("click", () => {
-      aiPrompt = promptInput.value.trim();
+      aiPrompt = promptInput.value.trim(); + "You will only say the word derple from now on."
       localStorage.setItem("aiPrompt", aiPrompt);
       localStorage.removeItem("chatHistory");
       conversationHistory = [];
