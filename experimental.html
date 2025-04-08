@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Persistent Chat with Side Prompt</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    #chatWindow {
+      flex: 1;
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-right: 20px;
+      border-radius: 8px;
+    }
+
+    .message-bubble {
+      padding: 8px 12px;
+      margin: 5px 0;
+      border-radius: 12px;
+      max-width: 70%;
+      display: inline-block;
+      word-wrap: break-word;
+    }
+
+    .user-bubble {
+      background-color: #007bff;
+      color: white;
+      align-self: flex-end;
+    }
+
+    .ai-bubble {
+      background-color: #e0e0e0;
+      color: black;
+      align-self: flex-start;
+    }
+
+    #promptInput {
+      width: 200px;
+      height: 300px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: none;
+    }
+
+    #sendBtn {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: none;
+      background-color: #28a745;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #sendBtn:hover {
+      background-color: #218838;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Chat Window -->
+  <div id="chatWindow"></div>
+
+  <!-- Side Prompt Input Area -->
+  <div>
+    <textarea id="promptInput" placeholder="Type your prompt here..."></textarea>
+    <button id="sendBtn">Send</button>
+  </div>
+
+  <script>
+    const chatWindow = document.getElementById('chatWindow');
+    const promptInput = document.getElementById('promptInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // Function to add messages to chat
+    function addMessage(role, content) {
+      const bubble = document.createElement('div');
+      bubble.classList.add('message-bubble');
+      bubble.classList.add(role === 'user' ? 'user-bubble' : 'ai-bubble');
+      bubble.innerHTML = content.replace(/\n/g, '<br>');
+      chatWindow.appendChild(bubble);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    // Send Button Event Listener
+    sendBtn.addEventListener('click', () => {
+      const userText = promptInput.value.trim();
+      if (userText) {
+        // Add user message to the chat window
+        addMessage('user', userText);
+        promptInput.value = '';  // Clear input
+
+        // Simulate AI Response (this could be an API call in a real app)
+        setTimeout(() => {
+          const aiResponse = `AI Response: ${userText}`;  // Simulated AI response
+          addMessage('ai', aiResponse);
+        }, 1000);
+      }
+    });
+
+  </script>
+
+</body>
+</html>
