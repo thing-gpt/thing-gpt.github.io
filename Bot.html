@@ -98,6 +98,10 @@
     .input-section button {
       width: 48%;
     }
+    em {
+  font-style: italic;
+  color: #555; /* Optional: make slanted text gray */
+      }
 
   </style>
 </head>
@@ -171,7 +175,7 @@
             role: "system",
             content:
               aiPrompt +
-              " Adding on to the previous prompt, you will never break character. Never act as an AI assistant, but as a roleplaying AI. Always act like the character described. Never break character. Act more like a person and less like an assistant just answering questions. Have opinions.",
+              " Adding on to the previous prompt, you will never break character. Never act as an AI assistant, but as a roleplaying AI. Always act like the character described. Never break character. Act more like a person and less like an assistant just answering questions. Have opinions. Be emotional. ",
           },
           ...conversationHistory,
           { role: "user", content: userText },
@@ -215,11 +219,16 @@
     }
   
     function createMessageBubble({ role, content }) {
-      const div = document.createElement("div");
-      div.className = role === "user" ? "user-bubble" : "ai-bubble";
-      div.textContent = content;
-      return div;
-    }
+  const div = document.createElement("div");
+  div.className = role === "user" ? "user-bubble" : "ai-bubble";
+
+  // Replace *text* with <em>text</em>
+  const parsedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  div.innerHTML = parsedContent;
+
+  return div;
+}
+
   </script>
   
 </body>
