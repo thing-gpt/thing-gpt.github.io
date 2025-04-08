@@ -4,7 +4,7 @@
     <input type="text" id="myText" placeholder="Enter your text...">
     <input type="text" id="apiKey" value="gsk_..." placeholder="Enter your API key">
     <button id="myButton">Try it</button>
-    <p id="myText"></p>
+    <p id="userMessage"></p>
     <p id="demo"></p>
 
     <script type="module">
@@ -52,6 +52,8 @@
           document.getElementById("demo").textContent = "Error fetching response.";
         }
       });
+      document.getElementById('userMessage').textContent = userText;
+
     </script>
   </body>
 </html>
