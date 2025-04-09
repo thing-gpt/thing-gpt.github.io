@@ -119,11 +119,7 @@
     <button id="clearBtn" class="clear-btn">Clear Chat</button>
   </div>
 
-  <select id="apiKeySelector">
-    <option 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="gsk_key_1">Key 1</option>
-    <option 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="gsk_key_2">Key 2</option>
-    <option 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="gsk_key_3">Key 3</option>
-  </select>
+
 
   <!-- Input Section below chat window -->
   <div class="input-section">
@@ -163,8 +159,13 @@
       conversationHistory = [];
       chatWindow.innerHTML = "";
       addMessage("system", `AI Prompt updated: "${aiPrompt}"`);
+      const apiKey = getRandomApiKey();
     });
   
+    function getRandomApiKey() {
+      return apiKeys[Math.floor(Math.random() * apiKeys.length)];
+    }
+
     sendBtn.addEventListener("click", async () => {
       const userText = inputField.value.trim();
       const apiKey = document.getElementById("apiKeySelector").value.trim();
@@ -199,7 +200,12 @@
         addMessage("assistant", "[Error getting response]");
       }
     });
-  
+    const apiKeys = [
+    "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",
+    "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",
+    "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"
+  ];
+
     clearBtn.addEventListener("click", () => {
       localStorage.removeItem("chatHistory");
       localStorage.removeItem("aiPrompt");
