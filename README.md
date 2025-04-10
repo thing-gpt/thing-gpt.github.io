@@ -1,3 +1,2 @@
 # thing-gpt.github.io
-pretty much just a testing ground for making ai clones or something
-go away
+Open source version of thing-rpt.github.io. Only differences include the censorship of my API keys. Have fun!
