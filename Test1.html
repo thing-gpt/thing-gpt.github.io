@@ -131,7 +131,6 @@
   
     clearBtn.addEventListener("click", () => {
       localStorage.removeItem("chatHistoryLB");
-      localStorage.removeItem("aiPrompt");
       conversationHistory = [];
       aiPrompt = "";
       promptInput.value = "";
