@@ -23,6 +23,41 @@
     </div>
   </div>
 
+<!-- Modal for Terms of Service -->
+<div class="modal-overlay" id="tosModal">
+  <div class="modal-content">
+    <button onclick="document.getElementById('tosModal').style.display='none'">Close</button>
+    <h3>Terms of Service</h3>
+    <p>
+      These are the terms of service. By using this site, you agree to not misuse or abuse the AI features...
+      (You can add your own ToS here.)
+    </p>
+  </div>
+</div>
+
+<!-- Modal for Privacy Policy -->
+<div class="modal-overlay" id="privacyModal">
+  <div class="modal-content">
+    <button onclick="document.getElementById('privacyModal').style.display='none'">Close</button>
+    <h3>Privacy Policy</h3>
+   <p>
+  By using this service, you agree to our
+  <span class="modal-link" id="showTOS">Terms of Service</span> and
+  <span class="modal-link" id="showPrivacy">Privacy Policy</span>.
+  Please read carefully.
+</p> <p>
+      We care about your privacy. This app logs chat messages to Supabase for analytics and moderation...
+      (Insert your actual privacy policy here.)
+    </p>
+  </div>
+</div>
+
+
+
+
+
+
+
   <h2>Test Chat</h2>
 
   <!-- Main Chat Section -->
@@ -189,6 +224,14 @@
         el.style.opacity = "1";
       });
     });
+    document.getElementById("showTOS").addEventListener("click", () => {
+  document.getElementById("tosModal").style.display = "flex";
+});
+
+document.getElementById("showPrivacy").addEventListener("click", () => {
+  document.getElementById("privacyModal").style.display = "flex";
+});
+
   </script>
 </body>
 </html>
