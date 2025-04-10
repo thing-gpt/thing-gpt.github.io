@@ -117,13 +117,21 @@
       chatWindow.innerHTML = "";
     });
   
-    function addMessage(role, content) {
+    async function addMessage(role, content) {
       const msg = { role, content };
       conversationHistory.push(msg);
       localStorage.setItem("chatHistory", JSON.stringify(conversationHistory));
       chatWindow.appendChild(createMessageBubble(msg));
       chatWindow.scrollTop = chatWindow.scrollHeight;
+
+  // ✅ Log to Supabase
+    try {
+      await supabase.from("chat_logs").insert([{ role, content }]);
+    } catch (err) {
+      console.error("Failed to log message to Supabase:", err);
     }
+}
+
   
     function renderHistory(history) {
       history.forEach((msg) => {
