@@ -5,8 +5,63 @@
   <title>Thing-GPT</title>
   <link rel="stylesheet" href="/styles/ogstyle.css">
   <meta name="google-adsense-account" content="ca-pub-6553820111354942">
+  <style>
+    /* Style for the disclaimer overlay */
+    #disclaimerOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      text-align: center;
+    }
+
+    #disclaimerContent {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 80%;
+      font-size: 1.2em;
+    }
+
+    #disclaimerContent button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #disclaimerContent button:hover {
+      background-color: #45a049;
+    }
+
+    /* Ensure chat window is disabled until the disclaimer is dismissed */
+    #chatWindow, .side-panel, .input-section {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+  </style>
 </head>
 <body>
+  <!-- Disclaimer Overlay -->
+  <div id="disclaimerOverlay">
+    <div id="disclaimerContent">
+      <p>By using this service, you agree to the following terms and conditions. Please read carefully.</p>
+      <button id="dismissDisclaimer">OKAY</button>
+    </div>
+  </div>
+
   <h2>Test Chat</h2>
 
   <!-- Main Chat Section -->
@@ -20,36 +75,24 @@
     <button id="clearBtn" class="clear-btn">Clear Chat</button>
   </div>
 
-
-
   <!-- Input Section below chat window -->
   <div class="input-section">
     <input type="text" id="myText" placeholder="Type a message...">
     <button id="sendBtn">Send</button>
   </div>
 
-
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6553820111354942"
      crossorigin="anonymous"></script>
-<!-- ShittyAdware -->
-<ins class="adsbygoogle"
+
+  <ins class="adsbygoogle"
      style="display:block"
      data-ad-client="ca-pub-6553820111354942"
      data-ad-slot="9416953881"
      data-ad-format="auto"
      data-full-width-responsive="true"></ins>
-<script>
+  <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-
-
-
-
-
-
+  </script>
 
   <script type="module">
     import Groq from "https://esm.sh/groq-sdk";
@@ -64,6 +107,7 @@
     const clearBtn = document.getElementById("clearBtn");
     const applyPromptBtn = document.getElementById("applyPromptBtn");
     const promptInput = document.getElementById("promptInput");
+    const disclaimerOverlay = document.getElementById("disclaimerOverlay");
   
     const apiKeys = [
       "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",
@@ -172,9 +216,18 @@
       div.innerHTML = parsedContent;
       return div;
     }
+
+    // Dismiss the disclaimer when the "OKAY" button is clicked
+    document.getElementById("dismissDisclaimer").addEventListener("click", () => {
+      disclaimerOverlay.style.display = "none"; // Hide the overlay
+      // Enable chat interaction
+      chatWindow.style.pointerEvents = "auto";
+      chatWindow.style.opacity = "1";
+      document.querySelectorAll('.side-panel, .input-section').forEach(el => {
+        el.style.pointerEvents = "auto";
+        el.style.opacity = "1";
+      });
+    });
   </script>
-  
-  
-  
 </body>
 </html>
