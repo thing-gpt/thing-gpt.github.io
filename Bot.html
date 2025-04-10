@@ -4,7 +4,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <meta charset="UTF-8">
   <title>Thing-GPT</title>
-  <style src=styles/ogstyle.css></style>
+  <link rel="stylesheet" href="/styles/ogstyle.css">
 </head>
 <body>
   <h2>Test Chat</h2>
@@ -30,6 +30,10 @@
 
   <script type="module">
     import Groq from "https://esm.sh/groq-sdk";
+    const supabaseUrl = "https://qcdmvyhxhkwkvmrvtfhd.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjZG12eWh4aGt3a3ZtcnZ0ZmhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQyNDI0NjgsImV4cCI6MjA1OTgxODQ2OH0.QdulTuRpCJ-wdHeJbhJq13HenP6d96Ux91plSvV32k0";
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
   
     const chatWindow = document.getElementById("chatWindow");
     const inputField = document.getElementById("myText");
