@@ -1,2 +1,2 @@
 # thing-gpt.github.io
-Open source version of thing-rpt.github.io. Only differences include the censorship of my API keys. Have fun!
+Open source AI website that utilizes Groq's API. Have fun!
