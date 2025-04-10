@@ -30,10 +30,10 @@
   <script type="module">
     import Groq from "https://esm.sh/groq-sdk";
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
+  
     const supabaseUrl = "https://qcdmvyhxhkwkvmrvtfhd.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjZG12eWh4aGt3a3ZtcnZ0ZmhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQyNDI0NjgsImV4cCI6MjA1OTgxODQ2OH0.QdulTuRpCJ-wdHeJbhJq13HenP6d96Ux91plSvV32k0";
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
     const chatWindow = document.getElementById("chatWindow");
     const inputField = document.getElementById("myText");
     const sendBtn = document.getElementById("sendBtn");
@@ -122,15 +122,17 @@
       localStorage.setItem("chatHistory", JSON.stringify(conversationHistory));
       chatWindow.appendChild(createMessageBubble(msg));
       chatWindow.scrollTop = chatWindow.scrollHeight;
-
-  // ✅ Log to Supabase
-    try {
-      await supabase.from("chat_logs").insert([{ role, content }]);
-    } catch (err) {
-      console.error("Failed to log message to Supabase:", err);
+  
+      // ✅ Log to Supabase
+      try {
+        const { error } = await supabaseClient.from("chat_logs").insert([{ role, content }]);
+        if (error) {
+          console.error("Failed to log message to Supabase:", error);
+        }
+      } catch (err) {
+        console.error("Error inserting into Supabase:", err);
+      }
     }
-}
-
   
     function renderHistory(history) {
       history.forEach((msg) => {
@@ -147,6 +149,7 @@
       return div;
     }
   </script>
+  
   
   
 </body>
