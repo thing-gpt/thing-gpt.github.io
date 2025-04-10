@@ -184,4 +184,11 @@ color: #555; /* Optional: make slanted text gray */
   cursor: pointer;
   border-radius: 4px;
 }
-
+.terms-container {
+  max-height: 400px; /* Adjust height as needed */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 20px;
+  background-color: #f9f9f9; /* Optional: adds a background color */
+  border: 1px solid #ddd; /* Optional: adds a border */
+  margin-bottom: 20px; /* Optional: adds space below */
+}
