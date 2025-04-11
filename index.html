@@ -15,7 +15,7 @@
             margin: 0 auto;
         }
         .link-containerlarge {
-            display: grid;
+            display: flex;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             max-width: 1000px;
@@ -36,7 +36,7 @@
 .buttonlarge {
     top: 10px;
     right: 15px;
-    display: inline-block;
+    display: flex;
     padding: 10px 20px;
     background-color: #666666;
     color: rgb(255, 255, 255);
@@ -76,13 +76,12 @@
 </center>
 <center>
     <div class="link-containerlarge">
-        <div class="buttonlarge">
-            <a href="/Bot.html" class="button">
-                <img src="/img" alt="">
-                <h4>Test Bot</h4>
-                <p>Under construction</p>
-            </a>
-        </div>   
+        <a href="/Bot.html" class="button">
+          <img src="/img" alt="">
+          <h4>Test Bot</h4>
+          <p>Under construction</p>
+        </a>
+      </div>
     </center>
     </div>
     <div class="link-container">
