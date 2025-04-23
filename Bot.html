@@ -132,6 +132,7 @@
   
         const aiResponse = result.choices[0]?.message?.content || "No response.";
         addMessage("assistant", aiResponse);
+        console.log("AI Response:", aiResponse);
       } catch (err) {
         console.error(err);
         addMessage("assistant", "[Error getting response, may have to wait.]");
@@ -218,7 +219,7 @@
     document.getElementById("showPrivacy").addEventListener("click", () => {
       document.getElementById("privacyModal").style.display = "flex";
     });
-    console.log("AI Response:", aiResponse);
+    
   </script>
 </body>
 </html>
