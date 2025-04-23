@@ -6,7 +6,9 @@
   <link rel="stylesheet" href="/styles/ogstyle.css">
   <meta name="google-adsense-account" content="ca-pub-6553820111354942">
   <style>
-    
+    .hidden-thought {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -22,8 +24,6 @@
       <button id="dismissDisclaimer">OKAY</button>
     </div>
   </div>
-
-
 
   <h2>Test Chat</h2>
 
@@ -175,8 +175,28 @@
     function createMessageBubble({ role, content }) {
       const div = document.createElement("div");
       div.className = role === "user" ? "user-bubble" : "ai-bubble";
-      const parsedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-      div.innerHTML = parsedContent;
+      
+      // Process the content
+      let processedContent = "";
+      
+      if (role === "assistant") {
+        // Split by lines or paragraphs that start with "#/"
+        const lines = content.split(/\n/);
+        for (let line of lines) {
+          if (line.startsWith("#/")) {
+            // Create a hidden span for thoughts
+            processedContent += `<span class="hidden-thought">${line}</span>`;
+          } else {
+            // Process asterisks for visible content
+            processedContent += line.replace(/\*([^*]+)\*/g, "<em>$1</em>") + "\n";
+          }
+        }
+      } else {
+        // Handle non-assistant messages as before
+        processedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+      }
+      
+      div.innerHTML = processedContent;
       return div;
     }
 
@@ -192,13 +212,12 @@
       });
     });
     document.getElementById("showTOS").addEventListener("click", () => {
-  document.getElementById("tosModal").style.display = "flex";
-});
+      document.getElementById("tosModal").style.display = "flex";
+    });
 
-document.getElementById("showPrivacy").addEventListener("click", () => {
-  document.getElementById("privacyModal").style.display = "flex";
-});
-
+    document.getElementById("showPrivacy").addEventListener("click", () => {
+      document.getElementById("privacyModal").style.display = "flex";
+    });
   </script>
 </body>
 </html>
