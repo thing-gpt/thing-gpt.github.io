@@ -127,7 +127,7 @@
   
         const result = await groq.chat.completions.create({
           messages: messages,
-          model: "qwen-qwq-32b",
+          model: "llama-3.3-70b-versatile",
         });
   
         const aiResponse = result.choices[0]?.message?.content || "No response.";
