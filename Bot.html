@@ -191,10 +191,12 @@
             // Process asterisks for visible content
             processedContent += line.replace(/\*([^*]+)\*/g, "<em>$1</em>") + "\n";
           }
+          
         }
       } else {
         // Handle non-assistant messages as before
         processedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+        processedContent = content.replace(":trol:", "/img/trollface.png");
       }
       
       div.innerHTML = processedContent;
