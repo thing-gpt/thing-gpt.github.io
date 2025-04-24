@@ -82,7 +82,7 @@
       return apiKeys[Math.floor(Math.random() * apiKeys.length)];
     }
   
-    let conversationHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
+    let conversationHistory = JSON.parse(localStorage.getItem("chatHistoryEX")) || [];
     let aiPrompt = localStorage.getItem("aiPrompt") || "";
   
     renderHistory(conversationHistory);
@@ -97,7 +97,7 @@
     applyPromptBtn.addEventListener("click", () => {
       aiPrompt = promptInput.value.trim();
       localStorage.setItem("aiPrompt", aiPrompt);
-      localStorage.removeItem("chatHistory");
+      localStorage.removeItem("chatHistoryEX");
       conversationHistory = [];
       chatWindow.innerHTML = "";
       addMessage("system", `AI Prompt updated: "${aiPrompt}"`);
@@ -140,7 +140,7 @@
     });
   
     clearBtn.addEventListener("click", () => {
-      localStorage.removeItem("chatHistory");
+      localStorage.removeItem("chatHistoryEX");
       localStorage.removeItem("aiPrompt");
       conversationHistory = [];
       aiPrompt = "";
@@ -151,7 +151,7 @@
     async function addMessage(role, content) {
       const msg = { role, content };
       conversationHistory.push(msg);
-      localStorage.setItem("chatHistory", JSON.stringify(conversationHistory));
+      localStorage.setItem("chatHistoryEX", JSON.stringify(conversationHistory));
       chatWindow.appendChild(createMessageBubble(msg));
       chatWindow.scrollTop = chatWindow.scrollHeight;
   
