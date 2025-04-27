@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Head content remains the same -->
   <meta charset="UTF-8">
   <title>Thing-RPT</title>
   <link rel="stylesheet" href="/styles/ogstyle.css">
@@ -13,7 +12,6 @@
   </style>
 </head>
 <body>
-  <!-- No changes to HTML structure -->
   <!-- Disclaimer Overlay -->
   <div id="disclaimerOverlay">
     <div id="disclaimerContent">
@@ -95,6 +93,20 @@
     function getRandomApiKey() {
       return apiKeys[Math.floor(Math.random() * apiKeys.length)];
     }
+
+    // Function to get current date and time with more precision
+    function getCurrentDateTime() {
+      const now = new Date();
+      return now.toLocaleString('en-US', { 
+        year: 'numeric', 
+        month: 'numeric', 
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true
+      });
+    }
   
     let conversationHistory = JSON.parse(localStorage.getItem("chatHistoryEX")) || [];
     let aiPrompt = localStorage.getItem("aiPrompt") || "";
@@ -161,9 +173,8 @@
   
       const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
 
-      // Get current date and time
-      const now = new Date();
-      const dateTimeString = now.toLocaleString();
+      // Get precise current date and time
+      const dateTimeString = getCurrentDateTime();
   
       try {
         const messages = [
@@ -214,9 +225,8 @@
       
       const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
       
-      // Get current date and time
-      const now = new Date();
-      const dateTimeString = now.toLocaleString();
+      // Get fresh timestamp for the follow-up message
+      const dateTimeString = getCurrentDateTime();
       
       try {
         const messages = [
@@ -274,9 +284,8 @@
       
       const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
       
-      // Get current date and time
-      const now = new Date();
-      const dateTimeString = now.toLocaleString();
+      // Get fresh timestamp for the checkup message
+      const dateTimeString = getCurrentDateTime();
       
       try {
         const messages = [
@@ -430,7 +439,7 @@
     document.getElementById("showPrivacy").addEventListener("click", () => {
       document.getElementById("privacyModal").style.display = "flex";
     });
-    //test
+    
   </script>
 </body>
 </html>
