@@ -891,18 +891,35 @@
       if (role === "assistant") {
         // Split by lines or paragraphs that start with "#"
         const lines = content.split(/\n/);
-        for (let line of lines) {
-          if (line.startsWith("#")) {
-            // Create a hidden span for thoughts
-            processedContent += `<span class="hidden-thought">${line}</span>`;
-          } else {
-            // Process asterisks for visible content and emoji replacement
-            let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-            lineContent = lineContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
-            processedContent += lineContent + "\n";
-            lineContent = lineContent.replace(/:larry:/g, '<img src="/img/Larry.png" alt="troll" class="chat-emoji" width="24" height="24">');
-            processedContent += lineContent + "\n";
-          }
+let processedContent = '';
+
+for (let line of lines) {
+  if (line.startsWith("#")) {
+    // Hidden “thoughts” stay hidden, one per line
+    processedContent += `<span class="hidden-thought">${line}</span>\n`;
+  } else {
+    // 1) Emphasis via *asterisks*
+    let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+    // 2) Trollface emoji
+    lineContent = lineContent.replace(
+      /:trol:/g,
+      '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">'
+    );
+
+    // 3) Larry emoji
+    lineContent = lineContent.replace(
+      /:larry:/g,
+      '<img src="/img/Larry.png" alt="larry" class="chat-emoji" width="24" height="24">'
+    );
+
+    // 4) Append exactly once, with all replacements done
+    processedContent += lineContent + "\n";
+  }
+}
+
+// Now `processedContent` contains your fully-processed HTML
+
         }
       } else {
         // Handle non-assistant messages including emoji replacement
