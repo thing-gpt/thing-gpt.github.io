@@ -900,6 +900,10 @@
             let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
             lineContent = lineContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
             processedContent += lineContent + "\n";
+                        // Process asterisks for visible content and emoji replacement
+            let lineContentLarry = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+            lineContentlarry = lineContentlarry.replace(/:larry:/g, '<img src="/img/Larry.png" alt="larry" class="chat-emoji" width="24" height="24">');
+            processedContent += lineContentlarry + "\n";
           }
         }
       } else {
