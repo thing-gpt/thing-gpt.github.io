@@ -3,456 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <title>Thing-RPT</title>
+  <link rel="stylesheet" href="/styles/ogstyle.css">
   <meta name="google-adsense-account" content="ca-pub-6553820111354942">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    }
-
-    body {
-      display: flex;
-      height: 100vh;
-      background-color: #f7f7f8;
-      color: #343541;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 260px;
-      background-color: #202123;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-    }
-
-    .sidebar-header {
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .new-chat-btn {
-      background-color: #343541;
-      color: #fff;
-      border: 1px solid #565869;
-      padding: 12px;
-      border-radius: 6px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 12px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.2s;
-    }
-
-    .new-chat-btn:hover {
-      background-color: #40414f;
-    }
-
-    .clear-btn {
-      margin-top: auto;
-      background-color: transparent;
-      color: #fff;
-      border: 1px solid #565869;
-      padding: 10px;
-      border-radius: 6px;
-      width: 100%;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.2s;
-    }
-
-    .clear-btn:hover {
-      background-color: #343541;
-    }
-
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Chat Window */
-    #chatWindow {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 0;
-      scroll-behavior: smooth;
-    }
-
-    .message-container {
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-      width: 100%;
-      display: flex;
-      gap: 20px;
-    }
-
-    .user-message {
-      background-color: #ffffff;
-    }
-
-    .ai-message {
-      background-color: #f7f7f8;
-    }
-
-    .system-message {
-      background-color: #f0f0f0;
-      padding: 10px;
-      text-align: center;
-      font-style: italic;
-      color: #666;
-    }
-
-    .avatar {
-      width: 30px;
-      height: 30px;
-      border-radius: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .user-avatar {
-      background-color: #ffffff;
-      color: #343541;
-      border: 1px solid #e5e5e5;
-    }
-
-    .ai-avatar {
-      background-color: #10a37f;
-      color: white;
-    }
-
-    .message-content {
-      flex-grow: 1;
-      line-height: 1.5;
-    }
-
     .hidden-thought {
       display: none;
     }
-
-    /* Input Section */
-    .input-section {
-      padding: 10px 20px;
-      background-color: #ffffff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      position: relative;
-      z-index: 10;
-      max-width: 800px;
-      margin: 0 auto 20px;
-      width: 100%;
-      border-radius: 10px;
-      border: 1px solid #e5e5e5;
-    }
-
-    .input-container {
-      position: relative;
-      display: flex;
-      align-items: flex-end;
-    }
-
-    #myText {
-      width: 100%;
-      padding: 12px 50px 12px 14px;
-      border: none;
-      resize: none;
-      min-height: 24px;
-      max-height: 200px;
-      font-size: 16px;
-      line-height: 1.5;
-      outline: none;
-      overflow-y: auto;
-    }
-
-    #sendBtn {
-      position: absolute;
-      right: 8px;
-      bottom: 8px;
-      background-color: #10a37f;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    #sendBtn:hover {
-      background-color: #0d8a6c;
-    }
-
-    /* Prompt Settings Modal */
-    .settings-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 100;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .settings-content {
-      background-color: white;
-      width: 90%;
-      max-width: 600px;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    }
-
-    .settings-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .close-settings {
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .settings-body {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .setting-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    #promptInput {
-      width: 100%;
-      min-height: 100px;
-      padding: 10px;
-      border: 1px solid #e5e5e5;
-      border-radius: 5px;
-      font-size: 14px;
-      resize: vertical;
-    }
-
-    .setting-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-
-    .setting-button {
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    #applyPromptBtn {
-      background-color: #10a37f;
-      color: white;
-      border: none;
-    }
-
-    #toggleCheckup {
-      background-color: #f0f0f0;
-      border: 1px solid #e5e5e5;
-    }
-
-    /* Disclaimer Overlay */
-    #disclaimerOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    #disclaimerContent {
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 500px;
-      width: 90%;
-      text-align: center;
-    }
-
-    #dismissDisclaimer {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #10a37f;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #dismissDisclaimer:hover {
-      background-color: #0d8a6c;
-    }
-
-    /* Advertisement */
-    .ad-container {
-      padding: 20px;
-      text-align: center;
-      background-color: #f0f0f0;
-      border-top: 1px solid #e5e5e5;
-    }
-
-    /* Settings Button */
-    .settings-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      color: #666;
-    }
-
-    em {
-      font-style: italic;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        padding: 10px;
-      }
-
-      .main-content {
-        height: calc(100vh - 180px);
-      }
-
-      .message-container {
-        padding: 10px;
-      }
-    }
-    .user-bubble {
-    align-self: flex-end;
-    background: #007bff;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 16px;
-    max-width: 75%;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-
-  .ai-bubble {
-    align-self: flex-start;
-    background: #e0e0e0;
-    color: black;
-    padding: 8px 12px;
-    border-radius: 16px;
-    max-width: 75%;
-  }
   </style>
 </head>
 <body>
-
-
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <h2>Thing-RPT</h2>
-    </div>
-    <button id="newChatBtn" class="new-chat-btn">
-      <span>+</span> New chat
-    </button>
-    <button id="clearBtn" class="clear-btn">Clear conversations</button>
-  </div>
-
-  <!-- Main Content -->
-  <div class="main-content">
-    <button id="settingsBtn" class="settings-btn">⚙️</button>
-    
-    <!-- Chat Window -->
-    <div id="chatWindow"></div>
-
-    <!-- Input Section -->
-    <div class="input-section">
-      <div class="input-container">
-        <textarea id="myText" placeholder="Type a message..." rows="1"></textarea>
-        <button id="sendBtn">→</button>
-      </div>
-    </div>
-
-    <!-- Advertisement -->
-    <div class="ad-container">
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6553820111354942"
-        crossorigin="anonymous"></script>
-      <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-6553820111354942"
-        data-ad-slot="9416953881"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
+  <!-- Disclaimer Overlay -->
+  <div id="disclaimerOverlay">
+    <div id="disclaimerContent">
+      <p>
+        By using this service, you agree to our
+        <a href="tos" target="_blank">Terms of Service</a>  and
+        <a href="PrPy" target="_blank">Privacy Policy</a>.
+        Please read carefully.
+      </p>
+      <button id="dismissDisclaimer">OKAY</button>
     </div>
   </div>
 
-  <!-- Settings Modal -->
-  <div id="settingsModal" class="settings-modal">
-    <div class="settings-content">
-      <div class="settings-header">
-        <h3>AI Settings</h3>
-        <button class="close-settings">×</button>
-      </div>
-      <div class="settings-body">
-        <div class="setting-group">
-          <label for="promptInput">AI Prompt</label>
-          <textarea id="promptInput" placeholder="Enter prompt for the AI..."></textarea>
-        </div>
-        <div class="setting-group">
-          <label for="checkupTime">AI Checkup Timeout (minutes):</label>
-          <input type="number" id="checkupTime" min="1" max="60" value="5">
-        </div>
-        <div class="setting-buttons">
-          <button id="toggleCheckup" class="setting-button">Enable AI Checkups</button>
-          <button id="applyPromptBtn" class="setting-button">Apply Prompt</button>
-        </div>
-      </div>
+  <h2>Test Chat</h2>
+
+  <!-- Main Chat Section -->
+  <div id="chatWindow"></div>
+
+  <!-- Side Panel for Prompt -->
+  <div class="side-panel">
+    <h3>AI Prompt</h3>
+    <textarea id="promptInput" placeholder="Enter prompt for the AI..."></textarea>
+    <button id="applyPromptBtn">Apply Prompt</button>
+    <button id="clearBtn" class="clear-btn">Clear Chat</button>
+    <div class="setting-group">
+      <label for="checkupTime">AI Checkup Timeout (minutes):</label>
+      <input type="number" id="checkupTime" min="1" max="60" value="5">
+      <button id="toggleCheckup">Enable AI Checkups</button>
     </div>
   </div>
+
+  <!-- Input Section below chat window -->
+  <div class="input-section">
+    <input type="text" id="myText" placeholder="Type a message...">
+    <button id="sendBtn">Send</button>
+  </div>
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6553820111354942"
+     crossorigin="anonymous"></script>
+
+  <ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-6553820111354942"
+     data-ad-slot="9416953881"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+  <script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
 
   <script type="module">
     import Groq from "https://esm.sh/groq-sdk";
@@ -461,15 +69,10 @@
     const supabaseUrl = "https://qcdmvyhxhkwkvmrvtfhd.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjZG12eWh4aGt3a3ZtcnZ0ZmhkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDI0MjQ2OCwiZXhwIjoyMDU5ODE4NDY4fQ.4KLPIJqE_TsNVnM5-sdBaaVOQHYQJNkMfwcB17_1zzQ";
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
-    
     const chatWindow = document.getElementById("chatWindow");
     const inputField = document.getElementById("myText");
     const sendBtn = document.getElementById("sendBtn");
     const clearBtn = document.getElementById("clearBtn");
-    const newChatBtn = document.getElementById("newChatBtn");
-    const settingsBtn = document.getElementById("settingsBtn");
-    const settingsModal = document.getElementById("settingsModal");
-    const closeSettingsBtn = document.querySelector(".close-settings");
     const applyPromptBtn = document.getElementById("applyPromptBtn");
     const promptInput = document.getElementById("promptInput");
     const disclaimerOverlay = document.getElementById("disclaimerOverlay");
@@ -511,38 +114,15 @@
     let checkupTimer = null;
     let doublesendTimer = null;
     
-    // Update UI based on current state
+    // Update button text based on current state
     updateCheckupButtonText();
-    if (aiPrompt) promptInput.value = aiPrompt;
     
     renderHistory(conversationHistory);
-    
-    // Auto-resize textarea
-    inputField.addEventListener('input', function() {
-      this.style.height = 'auto';
-      this.style.height = (this.scrollHeight) + 'px';
-    });
     
     // If checkups are enabled and there's chat history, start the timer
     if (checkupEnabled && conversationHistory.length > 0) {
       startCheckupTimer();
     }
-
-    // Event listeners for the settings modal
-    settingsBtn.addEventListener("click", () => {
-      settingsModal.style.display = "flex";
-    });
-    
-    closeSettingsBtn.addEventListener("click", () => {
-      settingsModal.style.display = "none";
-    });
-    
-    // Close modal when clicking outside
-    settingsModal.addEventListener("click", (event) => {
-      if (event.target === settingsModal) {
-        settingsModal.style.display = "none";
-      }
-    });
   
     inputField.addEventListener("keydown", (event) => {
       if (event.key === "Enter" && !event.shiftKey) {
@@ -559,7 +139,6 @@
       chatWindow.innerHTML = "";
       addMessage("system", `AI Prompt updated: "${aiPrompt}"`);
       resetCheckupTimer();
-      settingsModal.style.display = "none";
     });
     
     toggleCheckupBtn.addEventListener("click", () => {
@@ -577,16 +156,6 @@
     function updateCheckupButtonText() {
       toggleCheckupBtn.textContent = checkupEnabled ? "Disable AI Checkups" : "Enable AI Checkups";
     }
-    
-    newChatBtn.addEventListener("click", () => {
-      if (conversationHistory.length > 0) {
-        if (confirm("Start a new chat? Your current conversation will be saved.")) {
-          conversationHistory = [];
-          chatWindow.innerHTML = "";
-          resetCheckupTimer();
-        }
-      }
-    });
   
     sendBtn.addEventListener("click", async () => {
       const userText = inputField.value.trim();
@@ -595,7 +164,6 @@
   
       addMessage("user", userText);
       inputField.value = "";
-      inputField.style.height = 'auto';
       
       // Reset the checkup timer when user sends a message
       resetCheckupTimer();
@@ -607,9 +175,6 @@
 
       // Get precise current date and time
       const dateTimeString = getCurrentDateTime();
-      
-      // Show typing indicator
-      showTypingIndicator();
   
       try {
         const messages = [
@@ -629,9 +194,6 @@
           model: "llama-3.3-70b-versatile",
         });
   
-        // Remove typing indicator
-        removeTypingIndicator();
-        
         let aiResponse = result.choices[0]?.message?.content || "No response.";
         
         // Check if the AI wants to double-send (case-insensitive)
@@ -653,37 +215,9 @@
         }
       } catch (err) {
         console.error(err);
-        removeTypingIndicator();
         addMessage("assistant", "[Error getting response, may have to wait.]");
       }
     });
-    
-    function showTypingIndicator() {
-      const typingDiv = document.createElement("div");
-      typingDiv.className = "message-container ai-message";
-      typingDiv.id = "typingIndicator";
-      
-      const avatar = document.createElement("div");
-      avatar.className = "avatar ai-avatar";
-      avatar.textContent = "AI";
-      
-      const content = document.createElement("div");
-      content.className = "message-content";
-      content.innerHTML = "<em>Typing...</em>";
-      
-      typingDiv.appendChild(avatar);
-      typingDiv.appendChild(content);
-      
-      chatWindow.appendChild(typingDiv);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-    
-    function removeTypingIndicator() {
-      const typingIndicator = document.getElementById("typingIndicator");
-      if (typingIndicator) {
-        typingIndicator.remove();
-      }
-    }
     
     async function sendAIFollowUpMessage() {
       const apiKey = getRandomApiKey();
@@ -693,9 +227,6 @@
       
       // Get fresh timestamp for the follow-up message
       const dateTimeString = getCurrentDateTime();
-      
-      // Show typing indicator
-      showTypingIndicator();
       
       try {
         const messages = [
@@ -717,9 +248,6 @@
           messages: messages,
           model: "llama-3.3-70b-versatile",
         });
-        
-        // Remove typing indicator
-        removeTypingIndicator();
         
         let aiResponse = result.choices[0]?.message?.content || "No response.";
         
@@ -745,7 +273,6 @@
         resetCheckupTimer();
       } catch (err) {
         console.error("Error sending follow-up message:", err);
-        removeTypingIndicator();
       }
     }
     
@@ -759,9 +286,6 @@
       
       // Get fresh timestamp for the checkup message
       const dateTimeString = getCurrentDateTime();
-      
-      // Show typing indicator
-      showTypingIndicator();
       
       try {
         const messages = [
@@ -784,15 +308,11 @@
           model: "llama-3.3-70b-versatile",
         });
         
-        // Remove typing indicator
-        removeTypingIndicator();
-        
         let aiResponse = result.choices[0]?.message?.content || "No response.";
         
         // Check if the AI wants to double-send (case-insensitive)
         const wantsDoubleSend = DOUBLESEND_PATTERN.test(aiResponse);
         
-        // Remove the command from the visible
         // Remove the command from the visible message
         if (wantsDoubleSend) {
           aiResponse = aiResponse.replace(DOUBLESEND_PATTERN, "");
@@ -889,10 +409,6 @@
             let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
             lineContent = lineContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
             processedContent += lineContent + "\n";
-                        // Process asterisks for visible content and emoji replacement
-            let lineContentLarry = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-            lineContentlarry = lineContentlarry.replace(/:larry:/g, '<img src="/img/Larry.png" alt="larry" class="chat-emoji" width="24" height="24">');
-            processedContent += lineContentlarry + "\n";
           }
         }
       } else {
