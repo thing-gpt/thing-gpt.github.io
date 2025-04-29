@@ -908,6 +908,7 @@
         // Handle non-assistant messages including emoji replacement
         processedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
         processedContent = processedContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
+        processedContent = processedContent.replace(/:larry:/g, '<img src="/img/Larry.png" alt="larry" class="chat-emoji" width="24" height="24">');
       }
       
       div.innerHTML = processedContent;
