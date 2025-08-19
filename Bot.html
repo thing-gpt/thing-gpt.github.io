@@ -58,6 +58,7 @@
   </script>
 
   <script type="module">
+    require('dotenv').config();
     import Groq from "https://esm.sh/groq-sdk";
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
   
@@ -73,10 +74,11 @@
     const disclaimerOverlay = document.getElementById("disclaimerOverlay");
   
     const apiKeys = [
-      "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",
-      "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",
-      "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"
+      process.env.API1,
+      process.env.API2,
+      process.env.API3,
     ];
+    console.log(process.env.AUTH_TOKEN);
   
     function getRandomApiKey() {
       return apiKeys[Math.floor(Math.random() * apiKeys.length)];
