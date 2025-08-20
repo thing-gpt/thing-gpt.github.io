@@ -193,26 +193,7 @@
       div.innerHTML = processedContent;
       return div;
     }
-
-    // Dismiss the disclaimer when the "OKAY" button is clicked
-    document.getElementById("dismissDisclaimer").addEventListener("click", () => {
-      disclaimerOverlay.style.display = "none"; // Hide the overlay
-      // Enable chat interaction
-      chatWindow.style.pointerEvents = "auto";
-      chatWindow.style.opacity = "1";
-      document.querySelectorAll('.side-panel, .input-section').forEach(el => {
-        el.style.pointerEvents = "auto";
-        el.style.opacity = "1";
-      });
-    });
-    document.getElementById("showTOS").addEventListener("click", () => {
-      document.getElementById("tosModal").style.display = "flex";
-    });
-
-    document.getElementById("showPrivacy").addEventListener("click", () => {
-      document.getElementById("privacyModal").style.display = "flex";
-    });
-    
+  
   </script>
 </body>
 </html>
