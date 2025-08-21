@@ -85,7 +85,6 @@
   
     let conversationHistory = JSON.parse(localStorage.getItem("chatHistoryEX")) || [];
     let aiPrompt = localStorage.getItem("aiPrompt") || "";
-    console.log(apiKey)
     renderHistory(conversationHistory);
   
     inputField.addEventListener("keydown", (event) => {
