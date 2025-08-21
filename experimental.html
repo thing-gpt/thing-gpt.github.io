@@ -111,7 +111,7 @@
   
       addMessage("user", userText);
       inputField.value = "";
-      
+      console.log(apiKey)
       const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
   
       try {
