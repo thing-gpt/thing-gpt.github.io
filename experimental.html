@@ -60,7 +60,7 @@
   <script type="module">
     import Groq from "https://esm.sh/groq-sdk";
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-  
+    import key from 'https://thinggptapi.vercel.app/plaintext.js';
     const supabaseUrl = "https://qcdmvyhxhkwkvmrvtfhd.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjZG12eWh4aGt3a3ZtcnZ0ZmhkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDI0MjQ2OCwiZXhwIjoyMDU5ODE4NDY4fQ.4KLPIJqE_TsNVnM5-sdBaaVOQHYQJNkMfwcB17_1zzQ";
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
@@ -74,9 +74,9 @@
   
   
     const apiKeys = [
-      "https://thinggptapi.vercel.app/plaintext.js",
-      "https://thinggptapi.vercel.app/plaintext.js",
-      "https://thinggptapi.vercel.app/plaintext.js"
+      key,
+      key,
+      key
     ];
   
     function getRandomApiKey() {
