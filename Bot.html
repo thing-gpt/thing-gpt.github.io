@@ -167,7 +167,7 @@
       async function addMessage(role, content) {
         const msg = { role, content };
         conversationHistory.push(msg);
-        console.log(msg);
+        console.log(content);
         localStorage.setItem("chatHistory", JSON.stringify(conversationHistory));
         chatWindow.appendChild(createMessageBubble(msg));
         chatWindow.scrollTop = chatWindow.scrollHeight;
