@@ -97,7 +97,7 @@
     document.addEventListener('DOMContentLoaded', async () => {
       await loadGroqKey();
       
-      let conversationHistory = JSON.parse(localStorage.getItem("chatHistoryEX")) || [];
+      let conversationHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
       let aiPrompt = localStorage.getItem("aiPrompt") || "";
       promptInput.value = aiPrompt; // Initialize prompt input with stored value
       renderHistory(conversationHistory);
@@ -112,7 +112,7 @@
       applyPromptBtn.addEventListener("click", () => {
         aiPrompt = promptInput.value.trim();
         localStorage.setItem("aiPrompt", aiPrompt);
-        localStorage.removeItem("chatHistoryEX");
+        localStorage.removeItem("chatHistory");
         conversationHistory = [];
         chatWindow.innerHTML = "";
         addMessage("system", `AI Prompt updated: "${aiPrompt}"`);
@@ -156,7 +156,7 @@
       });
 
       clearBtn.addEventListener("click", () => {
-        localStorage.removeItem("chatHistoryEX");
+        localStorage.removeItem("chatHistory");
         localStorage.removeItem("aiPrompt");
         conversationHistory = [];
         aiPrompt = "";
@@ -167,7 +167,7 @@
       async function addMessage(role, content) {
         const msg = { role, content };
         conversationHistory.push(msg);
-        localStorage.setItem("chatHistoryEX", JSON.stringify(conversationHistory));
+        localStorage.setItem("chatHistory", JSON.stringify(conversationHistory));
         chatWindow.appendChild(createMessageBubble(msg));
         chatWindow.scrollTop = chatWindow.scrollHeight;
 

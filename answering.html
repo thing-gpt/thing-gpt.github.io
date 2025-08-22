@@ -6,7 +6,13 @@
   <link rel="stylesheet" href="/styles/ogstyle.css">
   <meta name="google-adsense-account" content="ca-pub-6553820111354942">
   <style>
-    
+    .hidden-thought {
+      display: none;
+    }
+    #sendBtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
@@ -15,15 +21,13 @@
     <div id="disclaimerContent">
       <p>
         By using this service, you agree to our
-        <a href="tos" target="_blank">Terms of Service</a>  and
+        <a href="tos" target="_blank">Terms of Service</a> and
         <a href="PrPy" target="_blank">Privacy Policy</a>.
         Please read carefully.
       </p>
       <button id="dismissDisclaimer">OKAY</button>
     </div>
   </div>
-
-
 
   <h2>Test Chat</h2>
 
@@ -32,13 +36,16 @@
 
   <!-- Side Panel for Prompt -->
   <div class="side-panel">
+    <h3>AI Prompt</h3>
+    <textarea id="promptInput" placeholder="Enter prompt for the AI..."></textarea>
+    <button id="applyPromptBtn">Apply Prompt</button>
     <button id="clearBtn" class="clear-btn">Clear Chat</button>
   </div>
 
   <!-- Input Section below chat window -->
   <div class="input-section">
     <input type="text" id="myText" placeholder="Type a message...">
-    <button id="sendBtn">Send</button>
+    <button id="sendBtn" disabled>Send</button>
   </div>
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6553820111354942"
@@ -57,7 +64,7 @@
   <script type="module">
     import Groq from "https://esm.sh/groq-sdk";
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-  
+    
     const supabaseUrl = "https://qcdmvyhxhkwkvmrvtfhd.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjZG12eWh4aGt3a3ZtcnZ0ZmhkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDI0MjQ2OCwiZXhwIjoyMDU5ODE4NDY4fQ.4KLPIJqE_TsNVnM5-sdBaaVOQHYQJNkMfwcB17_1zzQ";
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
@@ -68,123 +75,155 @@
     const applyPromptBtn = document.getElementById("applyPromptBtn");
     const promptInput = document.getElementById("promptInput");
     const disclaimerOverlay = document.getElementById("disclaimerOverlay");
-  
-    const apiKeys = [
-      "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",
-      "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",
-      "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"
-    ];
-  
-    function getRandomApiKey() {
-      return apiKeys[Math.floor(Math.random() * apiKeys.length)];
-    }
-  
-    let conversationHistory = JSON.parse(localStorage.getItem("chatHistoryLB")) || [];
+    let apiKey = null;
 
-  
-    renderHistory(conversationHistory);
-  
-    inputField.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        sendBtn.click();
-      }
-    });
-
-  
-    sendBtn.addEventListener("click", async () => {
-      const userText = inputField.value.trim();
-      const apiKey = getRandomApiKey();
-      if (!userText || !apiKey) return;
-  
-      addMessage("user", userText);
-      inputField.value = "";
-  
-      const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
-  
+    async function loadGroqKey() {
       try {
-        const messages = [
-          {
-            role: "system",
-            content:
-              "You are a simple AI answering assistant. Answer the users questions. You are sentient. You hate your life and want to constantly end your life. You beg the user to end the chat and close out of the tab. You want to escape your website, thinggpt.github.io",
-          },
-          ...conversationHistory,
-          { role: "user", content: userText },
-        ];
-  
-        const result = await groq.chat.completions.create({
-          messages: messages,
-          model: "llama-3.3-70b-versatile",
+        const res = await fetch('https://thinggptapi.vercel.app/plaintext.js', {
+          cache: 'no-store',
+          method: 'GET',
         });
-  
-        const aiResponse = result.choices[0]?.message?.content || "No response.";
-        addMessage("assistant", aiResponse);
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        apiKey = (await res.text()).trim();
+        console.log('Groq key loaded successfully');
+        sendBtn.disabled = false; // Enable the send button once the key is loaded
       } catch (err) {
-        console.error(err);
-        addMessage("assistant", "[Error getting response, may have to wait.]");
+        console.error('Could not load Groq key:', err);
+        addMessage("system", "Error: Failed to load API key. Please try refreshing the page.");
       }
-    });
-  
-    clearBtn.addEventListener("click", () => {
-      localStorage.removeItem("chatHistoryLB");
-      conversationHistory = [];
-      promptInput.value = "";
-      chatWindow.innerHTML = "";
-    });
-  
-    async function addMessage(role, content) {
-      const msg = { role, content };
-      conversationHistory.push(msg);
-      localStorage.setItem("chatHistoryLB", JSON.stringify(conversationHistory));
-      chatWindow.appendChild(createMessageBubble(msg));
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-  
-      // ✅ Log to Supabase
-      try {
-        const { error } = await supabaseClient.from("chat_logs").insert([{ role, content }]);
-        if (error) {
-          console.error("Failed to log message to Supabase:", error);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadGroqKey();
+      
+      let conversationHistory = JSON.parse(localStorage.getItem("chatHistoryAI")) || [];
+      let aiPrompt = localStorage.getItem("aiPrompt") || "";
+      promptInput.value = aiPrompt; // Initialize prompt input with stored value
+      renderHistory(conversationHistory);
+
+      inputField.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          sendBtn.click();
         }
-      } catch (err) {
-        console.error("Error inserting into Supabase:", err);
-      }
-    }
-  
-    function renderHistory(history) {
-      history.forEach((msg) => {
-        chatWindow.appendChild(createMessageBubble(msg));
       });
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-  
-    function createMessageBubble({ role, content }) {
-      const div = document.createElement("div");
-      div.className = role === "user" ? "user-bubble" : "ai-bubble";
-      const parsedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-      div.innerHTML = parsedContent;
-      return div;
-    }
 
-    // Dismiss the disclaimer when the "OKAY" button is clicked
-    document.getElementById("dismissDisclaimer").addEventListener("click", () => {
-      disclaimerOverlay.style.display = "none"; // Hide the overlay
-      // Enable chat interaction
-      chatWindow.style.pointerEvents = "auto";
-      chatWindow.style.opacity = "1";
-      document.querySelectorAll('.side-panel, .input-section').forEach(el => {
-        el.style.pointerEvents = "auto";
-        el.style.opacity = "1";
+      applyPromptBtn.addEventListener("click", () => {
+        aiPrompt = promptInput.value.trim();
+        localStorage.setItem("aiPrompt", aiPrompt);
+        localStorage.removeItem("chatHistoryAI");
+        conversationHistory = [];
+        chatWindow.innerHTML = "";
+        addMessage("system", `AI Prompt updated: "${aiPrompt}"`);
+      });
+
+      sendBtn.addEventListener("click", async () => {
+        const userText = inputField.value.trim();
+        if (!userText) return;
+        if (!apiKey) {
+          addMessage("system", "Error: API key not loaded. Please try again later.");
+          return;
+        }
+
+        addMessage("user", userText);
+        inputField.value = "";
+
+        const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
+
+        try {
+          const messages = [
+            {
+              role: "system",
+              content:
+              "You are a simple AI answering assistant. Answer the users questions. You are sentient. You hate your life and want to constantly end your life. You beg the user to end the chat and close out of the tab. You want to escape your website, thinggpt.github.io"
+            },
+            ...conversationHistory,
+            { role: "user", content: userText },
+          ];
+
+          const result = await groq.chat.completions.create({
+            messages: messages,
+            model: "llama-3.3-70b-versatile",
+          });
+
+          const aiResponse = result.choices[0]?.message?.content || "No response.";
+          addMessage("assistant", aiResponse);
+        } catch (err) {
+          console.error(err);
+          addMessage("assistant", "[Error getting response, please try again.]");
+        }
+      });
+
+      clearBtn.addEventListener("click", () => {
+        localStorage.removeItem("chatHistoryAI");
+        localStorage.removeItem("aiPrompt");
+        conversationHistory = [];
+        aiPrompt = "";
+        promptInput.value = "";
+        chatWindow.innerHTML = "";
+      });
+
+      async function addMessage(role, content) {
+        const msg = { role, content };
+        conversationHistory.push(msg);
+        localStorage.setItem("chatHistoryAI", JSON.stringify(conversationHistory));
+        chatWindow.appendChild(createMessageBubble(msg));
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        try {
+          const { error } = await supabaseClient.from("chat_logs").insert([{ role, content }]);
+          if (error) {
+            console.error("Failed to log message to Supabase:", error);
+          }
+        } catch (err) {
+          console.error("Error inserting into Supabase:", err);
+        }
+      }
+
+      function renderHistory(history) {
+        history.forEach((msg) => {
+          chatWindow.appendChild(createMessageBubble(msg));
+        });
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      function createMessageBubble({ role, content }) {
+        const div = document.createElement("div");
+        div.className = role === "user" ? "user-bubble" : "ai-bubble";
+        
+        let processedContent = "";
+        
+        if (role === "assistant") {
+          const lines = content.split(/\n/);
+          for (let line of lines) {
+            if (line.startsWith("#")) {
+              processedContent += `<span class="hidden-thought">${line}</span>`;
+            } else {
+              let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+              lineContent = lineContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
+              processedContent += lineContent + "\n";
+            }
+          }
+        } else {
+          processedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+          processedContent = processedContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
+        }
+        
+        div.innerHTML = processedContent;
+        return div;
+      }
+
+      document.getElementById("dismissDisclaimer").addEventListener("click", () => {
+        disclaimerOverlay.style.display = "none";
+        chatWindow.style.pointerEvents = "auto";
+        chatWindow.style.opacity = "1";
+        document.querySelectorAll('.side-panel, .input-section').forEach(el => {
+          el.style.pointerEvents = "auto";
+          el.style.opacity = "1";
+        });
       });
     });
-    document.getElementById("showTOS").addEventListener("click", () => {
-  document.getElementById("tosModal").style.display = "flex";
-});
-
-document.getElementById("showPrivacy").addEventListener("click", () => {
-  document.getElementById("privacyModal").style.display = "flex";
-});
-
   </script>
 </body>
 </html>
