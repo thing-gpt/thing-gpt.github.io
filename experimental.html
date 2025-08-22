@@ -71,12 +71,32 @@
     const applyPromptBtn = document.getElementById("applyPromptBtn");
     const promptInput = document.getElementById("promptInput");
     const disclaimerOverlay = document.getElementById("disclaimerOverlay");
+    let apiKey = null;          // will hold the Groq key once fetched
+
+async function loadGroqKey() {
+  try {
+    const res = await fetch('https://thinggptapi.vercel.app/plaintext.js', {
+      cache: 'no-store',  
+      method: 'GET',
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    apiKey = (await res.text()).trim(); 
+
+    console.log('Groq key loaded:', apiKey);
+  } catch (err) {
+    console.error('Could not load Groq key:', err);
+  }
+}
   
-  
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadGroqKey();
+ 
+});
     const apiKeys = [
-      key,
-      key,
-      key
+      apiKey,
+      apiKey,
+      apiKey
     ];
   
     function getRandomApiKey() {
@@ -223,6 +243,7 @@
     document.getElementById("showPrivacy").addEventListener("click", () => {
       document.getElementById("privacyModal").style.display = "flex";
     });
+    
     
   </script>
 </body>
