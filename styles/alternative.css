@@ -83,9 +83,10 @@ body {
   /* Styling for input section under chat */
   .input-section {
     width: 100%;
-    display: flex;
+    display: fixed;
     gap: 10px;
     margin-top: 10px;
+    padding-bottom: 200px;
   }
 
   .input-section input,
