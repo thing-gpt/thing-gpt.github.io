@@ -23,7 +23,6 @@
   <!--change this for this one-->
   <div class="side-panel">
     <h3>AI Prompt</h3>
-    <textarea id="promptInput" placeholder="Enter prompt for the AI..."></textarea>
     <button id="applyPromptBtn">Apply Prompt</button>
     <button id="clearBtn" class="clear-btn">Clear Chat</button>
   </div>
@@ -59,7 +58,6 @@
     const inputField = document.getElementById("myText");
     const sendBtn = document.getElementById("sendBtn");
     const clearBtn = document.getElementById("clearBtn");
-    const applyPromptBtn = document.getElementById("applyPromptBtn");
     const disclaimerOverlay = document.getElementById("disclaimerOverlay");
     let apiKey = null;
 
@@ -94,13 +92,6 @@
         }
       });
 
-      applyPromptBtn.addEventListener("click", () => {
-        localStorage.setItem("aiPrompt", aiPrompt);
-        localStorage.removeItem("chatHistoryEX");
-        conversationHistory = [];
-        chatWindow.innerHTML = "";
-        addMessage("system", `AI Prompt updated: "${aiPrompt}"`);
-      });
 
       sendBtn.addEventListener("click", async () => {
         const userText = inputField.value.trim();
