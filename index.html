@@ -71,12 +71,17 @@
   position: fixed;
   margin: 0;
   border-radius: 25px;
-  width: 1300px;
   height: 500px;
   background: rgb(214, 214, 214);
   z-index: -1;
-  margin-bottom: 400px;
-  margin-top: -140px;
+  margin-bottom: center;
+  margin-top: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  
 }
   
 </style>
@@ -93,7 +98,7 @@
     <div class="link-container">
         
     <div class="button">
-            <a href="/Bot.html" class="button">
+            <a href="/bots/Bot.html" class="button">
                 <img src="/img" alt="">
                 <h4>Test Bot</h4>
                 <p>Updated</p>
@@ -105,7 +110,7 @@
 
 
     <div class="button">
-            <a href="/Test1.html" class="button">
+            <a href="/bots/Test1.html" class="button">
                 <img src="/img" alt="">
                 <h4>Larry Bird</h4>
                 <p>Under construction</p>
@@ -113,7 +118,7 @@
         </div>   
 
     <div class="button">
-        <a href="/experimental.html" class="button">
+        <a href="/bots/experimental.html" class="button">
             <img src="/img" alt="">
             <h4>Experimental</h4>
             <p>Updated</p>
@@ -121,7 +126,7 @@
     </div>   
 
     <div class="button">
-            <a href="/answering.html" class="button">
+            <a href="/bots/answering.html" class="button">
                 <img src="/img" alt="">
                 <h4>AI</h4>
                 <p>Simple AI for questions.</p>
