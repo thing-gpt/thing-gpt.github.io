@@ -23,6 +23,7 @@
   <!--change this for this one-->
   <div class="side-panel">
     <h3>AI Prompt</h3>
+    <textarea id="promptInput" placeholder="Enter prompt for the AI..."></textarea>
     <button id="applyPromptBtn">Apply Prompt</button>
     <button id="clearBtn" class="clear-btn">Clear Chat</button>
   </div>
@@ -59,7 +60,6 @@
     const sendBtn = document.getElementById("sendBtn");
     const clearBtn = document.getElementById("clearBtn");
     const applyPromptBtn = document.getElementById("applyPromptBtn");
-    const promptInput = document.getElementById("promptInput");
     const disclaimerOverlay = document.getElementById("disclaimerOverlay");
     let apiKey = null;
 
@@ -85,7 +85,6 @@
       
       let conversationHistory = JSON.parse(localStorage.getItem("chatHistoryEX")) || [];
       let aiPrompt = localStorage.getItem("aiPrompt") || "";
-      promptInput.value = aiPrompt; // Initialize prompt input with stored value
       renderHistory(conversationHistory);
 
       inputField.addEventListener("keydown", (event) => {
@@ -96,7 +95,6 @@
       });
 
       applyPromptBtn.addEventListener("click", () => {
-        aiPrompt = promptInput.value.trim();
         localStorage.setItem("aiPrompt", aiPrompt);
         localStorage.removeItem("chatHistoryEX");
         conversationHistory = [];
@@ -147,7 +145,6 @@
         localStorage.removeItem("aiPrompt");
         conversationHistory = [];
         aiPrompt = "";
-        promptInput.value = "";
         chatWindow.innerHTML = "";
       });
 
