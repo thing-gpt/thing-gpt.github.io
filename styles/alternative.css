@@ -16,10 +16,10 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    padding-left: 40px;
     gap: 8px;
     margin-bottom: 10px;
     border-radius: 8px;
-    flex-grow: 1;
     width: 30%;
   }
 
