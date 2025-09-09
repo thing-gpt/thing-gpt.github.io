@@ -28,7 +28,7 @@ body {
     margin-bottom: 10px;
     border-radius: 8px;
     width: 30%;
-    /* Removed margin-left: auto */
+    margin-left: auto;
 }
 
 .user-bubble {
