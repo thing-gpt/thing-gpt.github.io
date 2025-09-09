@@ -4,13 +4,15 @@ body {
     padding: 0 16px;
     max-width: 1200px;
     display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
 /* Chat container to position chat window on the right */
 .chat-container {
     display: flex;
-    justify-content: flex-end; /* This will push the chat window to the right */
+    justify-content: flex-end;
+    margin-top: auto;
     width: 100%;
 }
 
