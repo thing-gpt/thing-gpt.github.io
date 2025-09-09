@@ -4,7 +4,6 @@ body {
     padding: 0 16px;
     max-width: 1200px;
     display: flex;
-    flex-direction: column; /* Changed from space-between to column */
     gap: 20px;
 }
 
