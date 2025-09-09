@@ -16,7 +16,7 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    padding-left: 40px;
+    padding-right: 40px;
     gap: 8px;
     margin-bottom: 10px;
     border-radius: 8px;
