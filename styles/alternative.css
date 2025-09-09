@@ -9,19 +9,21 @@ body {
   }
 
   /* Chat window styles */
-  #chatWindow {
-    border: 1px solid #ccc;
-    padding: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    padding-right: 40px;
-    gap: 8px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    width: 30%;
-  }
+#chatWindow {
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-right: 40px;
+  gap: 8px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  width: 30%;
+  margin-left: auto; 
+}
+
 
   .user-bubble {
     align-self: flex-end;
