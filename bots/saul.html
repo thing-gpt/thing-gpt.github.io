@@ -18,7 +18,7 @@
 <body>
 
   <div class="saul">
-<img src="/img/bettercalljimmy.png" alt="saul" width="250" height="500">
+<img src="/img/bettercalljimmy.png" id="saul" alt="saul" width="250" height="500">
 </div>
 
 <div class="chat-container">
@@ -46,6 +46,7 @@
     const inputField = document.getElementById("myText");
     const sendBtn = document.getElementById("sendBtn");
     const clearBtn = document.getElementById("clearBtn");
+    const saul = document.getElementById("saul");
     const disclaimerOverlay = document.getElementById("disclaimerOverlay");
     let apiKey = null;
 
@@ -161,7 +162,7 @@
           const lines = content.split(/\n/);
           for (let line of lines) {
             if (line.startsWith("#")) {
-              processedContent += `<span class="hidden-thought">${line}</span>`;
+              saul = saul.replace('<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
             } else {
               let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
               lineContent = lineContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
