@@ -10,10 +10,10 @@ body {
 /* Chat container to position chat window on the right */
 .chat-container {
     display: flex;
+    flex-direction: column;
     justify-content: flex-end;
     margin-top: auto;
     width: 100%;
-    flex-direction: column;
 }
 
 /* Chat window styles */
@@ -89,30 +89,30 @@ button:hover {
     background-color: #dc3545;
 }
 
-/* Styling for input section under chat */
-.input-section {
-    width: 100%;
-    display: flex; /* Changed from 'fixed' to 'flex' */
-    justify-content: flex-end; /* Align input section to the right as well */
-    gap: 10px;
-    margin-top: 10px;
-    padding-bottom: 200px;
-    flex-direction: column;
-}
-
-.input-section input,
-.input-section button {
-    width: 48%;
-}
-
-/* Alternative: if you want input section to take up the same width as chat */
+/* Styling for input section - now positioned below chat */
 .input-section {
     width: 30%; /* Match the chat window width */
-    margin-left: auto; /* Push to the right */
+    margin-left: auto; /* Push to the right to align with chat window */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 0; /* Remove top margin since it's now directly below chat */
+}
+
+/* Style the text input to take full width */
+.input-section #myText {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Container for the buttons to display them side by side */
+.input-section .button-container {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
-    padding-bottom: 200px;
+}
+
+.input-section .button-container button {
+    flex: 1; /* Make buttons equal width */
 }
 
 em {
@@ -164,7 +164,6 @@ em {
     cursor: pointer;
     border-radius: 4px;
 }
-
 
 .saul {
     align-self: flex-start; 
