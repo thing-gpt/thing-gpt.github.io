@@ -92,7 +92,7 @@ button:hover {
 
 /* Styling for input section - now positioned below chat */
 .input-section {
-    width: 30%; /* Match the chat window width */
+    width: 400px; /* Match the chat window width */
     margin-left: auto; /* Push to the right to align with chat window */
     display: flex;
     flex-direction: column;
