@@ -13,7 +13,8 @@ body {
     flex-direction: column;
     justify-content: flex-end;
     margin-top: auto;
-    width: 100%;
+    width: 500px;
+    
 }
 
 /* Chat window styles */
@@ -28,7 +29,7 @@ body {
     gap: 8px;
     margin-bottom: 10px;
     border-radius: 8px;
-    max-width: 30%;
+    max-width: 500px;
     margin-left: auto;
 }
 
