@@ -169,4 +169,6 @@ em {
     align-self: flex-start; 
     margin-bottom: 20px; 
     margin-left: 50px;
+    border-width: 7px;
+    border-color: black;
 }
