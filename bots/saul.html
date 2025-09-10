@@ -19,7 +19,6 @@
   <div class="saul">
     <img src="/img/bettercalljimmy.png" id="saul" alt="saul" width="250" height="500">
   </div>
-
   <div class="chat-container">
     <div id="chatWindow"></div>
     <div class="input-section">
@@ -28,14 +27,12 @@
       <button id="clearBtn" class="clear-btn">Clear Chat</button>
     </div>
   </div>
-
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6553820111354942"
      crossorigin="anonymous"></script>
-
   <script type="module">
     import Groq from "https://esm.sh/groq-sdk";
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-    
+   
     const supabaseUrl = "https://qcdmvyhxhkwkvmrvtfhd.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjZG12eWh4aGt3a3ZtcnZ0ZmhkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDI0MjQ2OCwiZXhwIjoyMDU5ODE4NDY4fQ.4KLPIJqE_TsNVnM5-sdBaaVOQHYQJNkMfwcB17_1zzQ";
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
@@ -45,21 +42,18 @@
     const clearBtn = document.getElementById("clearBtn");
     const saul = document.getElementById("saul");
     let apiKey = null;
-
     // Mapping of hashtags to image URLs
     const moodImages = {
       '#happy': '/img/bettercalljimmy.png', // Replace with actual happy image path
-      '#mad': '/img/saulgoodman.png',   // Replace with actual mad image path
+      '#mad': '/img/saulgoodman.png', // Replace with actual mad image path
       '#default': '/img/bettercalljimmy.png' // Default image
     };
-
     async function loadGroqKey() {
       try {
         const res = await fetch('https://thinggptapi.vercel.app/plaintext.js', {
           cache: 'no-store',
           method: 'GET',
         });
-
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         apiKey = (await res.text()).trim();
         console.log('Groq key loaded successfully');
@@ -69,21 +63,18 @@
         addMessage("system", "Error: Failed to load API key. Please try refreshing the page.");
       }
     }
-
     document.addEventListener('DOMContentLoaded', async () => {
       await loadGroqKey();
-      
+     
       let conversationHistory = JSON.parse(localStorage.getItem("chatHistorySG")) || [];
       let aiPrompt = localStorage.getItem("aiPrompt") || "";
       renderHistory(conversationHistory);
-
       inputField.addEventListener("keydown", (event) => {
         if (event.key === "Enter" && !event.shiftKey) {
           event.preventDefault();
           sendBtn.click();
         }
       });
-
       sendBtn.addEventListener("click", async () => {
         const userText = inputField.value.trim();
         if (!userText) return;
@@ -91,12 +82,9 @@
           addMessage("system", "Error: API key not loaded. Please try again later.");
           return;
         }
-
         addMessage("user", userText);
         inputField.value = "";
-
         const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
-
         try {
           const messages = [
             {
@@ -107,12 +95,10 @@
             ...conversationHistory,
             { role: "user", content: userText },
           ];
-
           const result = await groq.chat.completions.create({
             messages: messages,
             model: "llama-3.3-70b-versatile",
           });
-
           const aiResponse = result.choices[0]?.message?.content || "No response.";
           addMessage("assistant", aiResponse);
         } catch (err) {
@@ -120,7 +106,6 @@
           addMessage("assistant", "[Error getting response, please try again.]");
         }
       });
-
       clearBtn.addEventListener("click", () => {
         localStorage.removeItem("chatHistorySG");
         localStorage.removeItem("aiPrompt");
@@ -129,15 +114,13 @@
         chatWindow.innerHTML = "";
         saul.src = moodImages['#default']; // Reset to default image on clear
       });
-
       async function addMessage(role, content) {
         const msg = { role, content };
         conversationHistory.push(msg);
-        console.log(content);
+        console.log(`Adding message - Role: ${role}, Content: ${content}`); // Debug: Log message addition
         localStorage.setItem("chatHistorySG", JSON.stringify(conversationHistory));
         chatWindow.appendChild(createMessageBubble(msg));
         chatWindow.scrollTop = chatWindow.scrollHeight;
-
         try {
           const { error } = await supabaseClient.from("chat_logs").insert([{ role, content }]);
           if (error) {
@@ -147,51 +130,51 @@
           console.error("Error inserting into Supabase:", err);
         }
       }
-
       function renderHistory(history) {
         history.forEach((msg) => {
           chatWindow.appendChild(createMessageBubble(msg));
         });
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }
-
       function createMessageBubble({ role, content }) {
         const div = document.createElement("div");
         div.className = role === "user" ? "user-bubble" : "ai-bubble";
-        
-        let processedContent = "";
-        
+       
+        let processedContent = content;
+        let moodSet = false;
+       
         if (role === "assistant") {
-          const lines = content.split(/\n/);
-          let moodSet = false;
+          console.log(`Raw AI response: ${content}`); // Debug: Log raw AI content
           
-          for (let line of lines) {
-            // Check for hashtags to change the Saul image
-            if (line.match(/^#(happy|mad)$/)) {
-              const mood = line.trim();
-              if (moodImages[mood]) {
-                saul.src = moodImages[mood]; // Change the image
-                moodSet = true;
-              }
-              continue; // Skip adding the hashtag to the displayed content
+          // Use regex to detect #happy or #mad at the very start of the content, allowing for optional space or newline after
+          const moodMatch = content.match(/^#(happy|mad)\b\s*/i);
+          if (moodMatch) {
+            const mood = `#${moodMatch[1].toLowerCase()}`;
+            console.log(`Detected mood: ${mood}`); // Debug: Log detected mood
+            if (moodImages[mood]) {
+              saul.src = moodImages[mood]; // Change the image
+              moodSet = true;
             }
-            
-            // Process asterisks for emphasis and :trol: for troll face
-            let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-            lineContent = lineContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
-            processedContent += lineContent + "\n";
+            // Remove the matched mood tag from the content
+            processedContent = content.slice(moodMatch[0].length);
+          } else {
+            console.log('No mood detected at start'); // Debug: Log if no mood found
           }
           
-          // If no mood hashtag was found, reset to default image
+          // If no mood was set, reset to default
           if (!moodSet) {
             saul.src = moodImages['#default'];
           }
+          
+          // Process asterisks for emphasis and :trol: for troll face
+          processedContent = processedContent.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+          processedContent = processedContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
         } else {
           // For user messages, just process asterisks and troll face
           processedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
           processedContent = processedContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
         }
-        
+       
         div.innerHTML = processedContent.trim();
         return div;
       }
