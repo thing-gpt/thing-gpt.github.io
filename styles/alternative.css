@@ -140,7 +140,177 @@ em {
 .modal-content {
     background: #222;
     color: white;
+    padding: 30px;body {
+    font-family: sans-serif;
+    margin: 40px auto;
+    padding: 0 16px;
+    max-width: 1200px;
+    display: flex;
+    gap: 20px;
+}
+
+/* Chat container to position chat window on the right */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-top: auto;
+    width: 100%;
+}
+
+/* Chat window styles */
+#chatWindow {
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding-right: 40px;
+    gap: 8px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    width: 30%;
+    margin-left: auto;
+}
+
+.user-bubble {
+    align-self: flex-end;
+    background: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 16px;
+    max-width: 75%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.ai-bubble {
+    align-self: flex-start;
+    background: #e0e0e0;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 16px;
+    max-width: 75%;
+}
+
+/* Side panel for prompt */
+.side-panel {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Input fields and buttons styling */
+#myText, #apiKey, #promptInput {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 8px 12px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.clear-btn {
+    background-color: #dc3545;
+}
+
+/* Styling for input section - now positioned below chat */
+.input-section {
+    width: 30%; /* Match the chat window width */
+    margin-left: auto; /* Push to the right to align with chat window */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 0; /* Remove top margin since it's now directly below chat */
+}
+
+/* Style the text input to take full width */
+.input-section #myText {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Container for the buttons to display them side by side */
+.input-section .button-container {
+    display: flex;
+    gap: 10px;
+}
+
+.input-section .button-container button {
+    flex: 1; /* Make buttons equal width */
+}
+
+em {
+    font-style: italic;
+    color: #555; /* Optional: make slanted text gray */
+}
+
+.modal-link {
+    text-decoration: underline;
+    color: #4ecdc4;
+    cursor: pointer;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.modal-content {
+    background: #222;
+    color: white;
     padding: 30px;
+    max-width: 600px;
+    border-radius: 10px;
+    position: relative;
+    font-size: 1em;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+}
+
+.modal-content button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.saul {
+    align-self: flex-start; 
+    margin-bottom: 20px; 
+}
     max-width: 600px;
     border-radius: 10px;
     position: relative;
