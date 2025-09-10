@@ -28,7 +28,7 @@ body {
     gap: 8px;
     margin-bottom: 10px;
     border-radius: 8px;
-    max-width: 30%;
+    width: 30%;
     margin-left: auto;
 }
 
