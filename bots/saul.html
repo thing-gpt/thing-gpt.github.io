@@ -18,19 +18,17 @@
 <body>
 
   <div class="saul">
-<img src="/img/bettercalljimmy.png" alt="saul" width="250" height="500">
-</div>
+    <img src="/img/bettercalljimmy.png" alt="saul" width="250" height="500">
+  </div>
 
-<div class="chat-container">
-  <div id="chatWindow"></div>
-  <div class="input-section">
-  <input type="text" id="myText" placeholder="Type a message...">
-  <button id="sendBtn" disabled>Send</button>
-  <button id="clearBtn" class="clear-btn">Clear Chat</button>
-</div>
-</div>
-
-
+  <div class="chat-container">
+    <div id="chatWindow"></div>
+    <div class="input-section">
+      <input type="text" id="myText" placeholder="Type a message...">
+      <button id="sendBtn" disabled>Send</button>
+      <button id="clearBtn" class="clear-btn">Clear Chat</button>
+    </div>
+  </div>
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6553820111354942"
      crossorigin="anonymous"></script>
@@ -48,6 +46,11 @@
     const clearBtn = document.getElementById("clearBtn");
     const disclaimerOverlay = document.getElementById("disclaimerOverlay");
     let apiKey = null;
+
+    function setSaulImage(src) {
+      const saulImg = document.querySelector('.saul img');
+      if (saulImg) saulImg.src = src;
+    }
 
     async function loadGroqKey() {
       try {
@@ -79,7 +82,6 @@
           sendBtn.click();
         }
       });
-
 
       sendBtn.addEventListener("click", async () => {
         const userText = inputField.value.trim();
@@ -134,6 +136,12 @@
         chatWindow.appendChild(createMessageBubble(msg));
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
+        if (role === "assistant") {
+          setSaulImage("/img/saul-talking.png");
+        } else if (role === "user") {
+          setSaulImage("/img/bettercalljimmy.png");
+        }
+
         try {
           const { error } = await supabaseClient.from("chat_logs").insert([{ role, content }]);
           if (error) {
@@ -151,36 +159,30 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }
 
-   // ...existing code...
-function createMessageBubble({ role, content }) {
-  const div = document.createElement("div");
-  div.className = role === "user" ? "user-bubble" : "ai-bubble";
+      function createMessageBubble({ role, content }) {
+        const div = document.createElement("div");
+        div.className = role === "user" ? "user-bubble" : "ai-bubble";
 
-  let processedContent = "";
+        let processedContent = "";
 
-  if (role === "assistant") {
-    const lines = content.split(/\n/);
-    for (let line of lines) {
-      if (line.startsWith("#")) {
-        processedContent += `<span class="hidden-thought">${line}</span>`;
-      } else {
-        let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-        lineContent = lineContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
-        processedContent += lineContent + "\n";
+        if (role === "assistant") {
+          const lines = content.split(/\n/);
+          for (let line of lines) {
+            if (line.startsWith("#")) {
+              processedContent += `<span class="hidden-thought">${line}</span>`;
+            } else {
+              let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+              lineContent = lineContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
+              processedContent += lineContent + "\n";
+            }
+          }
+        } else {
+          processedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+          processedContent = processedContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
+        }
+
+        div.innerHTML = processedContent;
+        return div;
       }
-    }
-  } else {
-    processedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-    processedContent = processedContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
-  }
-
-  div.innerHTML = processedContent;
-  return div;
-}
-// ...existing code...
-
 
     });
-  </script>
-</body>
-</html>
