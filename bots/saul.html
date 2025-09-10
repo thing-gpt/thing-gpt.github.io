@@ -147,8 +147,8 @@
         if (role === "assistant") {
           console.log(`Raw AI response: ${content}`); // Debug: Log raw AI content
           
-          // Use regex to detect #happy or #mad at the very start of the content, allowing for optional space or newline after
-          const moodMatch = content.match(/^#(happy|mad)\b\s*/i);
+  
+          const moodMatch = content.match(/^#(happy|mad|serious)\b\s*/i);
           if (moodMatch) {
             const mood = `#${moodMatch[1].toLowerCase()}`;
             console.log(`Detected mood: ${mood}`); // Debug: Log detected mood
