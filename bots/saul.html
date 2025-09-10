@@ -16,21 +16,18 @@
   </style>
 </head>
 <body>
-
   <div class="saul">
-<img src="/img/bettercalljimmy.png" id="saul" alt="saul" width="250" height="500">
-</div>
+    <img src="/img/bettercalljimmy.png" id="saul" alt="saul" width="250" height="500">
+  </div>
 
-<div class="chat-container">
-  <div id="chatWindow"></div>
-  <div class="input-section">
-  <input type="text" id="myText" placeholder="Type a message...">
-  <button id="sendBtn" disabled>Send</button>
-  <button id="clearBtn" class="clear-btn">Clear Chat</button>
-</div>
-</div>
-
-
+  <div class="chat-container">
+    <div id="chatWindow"></div>
+    <div class="input-section">
+      <input type="text" id="myText" placeholder="Type a message...">
+      <button id="sendBtn" disabled>Send</button>
+      <button id="clearBtn" class="clear-btn">Clear Chat</button>
+    </div>
+  </div>
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6553820111354942"
      crossorigin="anonymous"></script>
@@ -47,8 +44,14 @@
     const sendBtn = document.getElementById("sendBtn");
     const clearBtn = document.getElementById("clearBtn");
     const saul = document.getElementById("saul");
-    const disclaimerOverlay = document.getElementById("disclaimerOverlay");
     let apiKey = null;
+
+    // Mapping of hashtags to image URLs
+    const moodImages = {
+      '#happy': '/img/saul_happy.png', // Replace with actual happy image path
+      '#mad': '/img/saul_mad.png',   // Replace with actual mad image path
+      '#default': '/img/bettercalljimmy.png' // Default image
+    };
 
     async function loadGroqKey() {
       try {
@@ -80,7 +83,6 @@
           sendBtn.click();
         }
       });
-
 
       sendBtn.addEventListener("click", async () => {
         const userText = inputField.value.trim();
@@ -125,6 +127,7 @@
         conversationHistory = [];
         aiPrompt = "";
         chatWindow.innerHTML = "";
+        saul.src = moodImages['#default']; // Reset to default image on clear
       });
 
       async function addMessage(role, content) {
@@ -160,25 +163,38 @@
         
         if (role === "assistant") {
           const lines = content.split(/\n/);
+          let moodSet = false;
+          
           for (let line of lines) {
-            if (line.startsWith("#")) {
-              saul = saul.replace('<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
-            } else {
-              let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-              lineContent = lineContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
-              processedContent += lineContent + "\n";
+            // Check for hashtags to change the Saul image
+            if (line.match(/^#(happy|mad)$/)) {
+              const mood = line.trim();
+              if (moodImages[mood]) {
+                saul.src = moodImages[mood]; // Change the image
+                moodSet = true;
+              }
+              continue; // Skip adding the hashtag to the displayed content
             }
+            
+            // Process asterisks for emphasis and :trol: for troll face
+            let lineContent = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+            lineContent = lineContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
+            processedContent += lineContent + "\n";
+          }
+          
+          // If no mood hashtag was found, reset to default image
+          if (!moodSet) {
+            saul.src = moodImages['#default'];
           }
         } else {
+          // For user messages, just process asterisks and troll face
           processedContent = content.replace(/\*([^*]+)\*/g, "<em>$1</em>");
           processedContent = processedContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
         }
         
-        div.innerHTML = processedContent;
+        div.innerHTML = processedContent.trim();
         return div;
       }
-
-
     });
   </script>
 </body>
