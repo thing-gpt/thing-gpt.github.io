@@ -127,8 +127,8 @@ sendBtn.addEventListener("click", async () => {
   const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
 
   // Persona prompts
-  const proPrompt = "You are AI #1. Always argue in favor of the topic.";
-  const conPrompt = "You are AI #2. Always argue against the topic.";
+  const proPrompt = "You are AI #1. Always argue in favor of the topic. Always have a 'glass half full' way. Support your reasoning with opinions, not facts. Leave your response fairly short.";
+  const conPrompt = "You are AI #2. Always argue against the topic. Always have a 'glass half empty' way. Support your reasoning with facts and opinions. Leave your response fairly short.";
 
   let lastMessage = userText;
 
