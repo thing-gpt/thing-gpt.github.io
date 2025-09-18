@@ -167,14 +167,9 @@ for (let i = 0; i < 10; i++) {
   const role = isAi1Turn ? "AI #1" : "AI #2";
 
   try {
-const messages = [];
-
-if (isAi1Turn) {
-  messages.push({ role: "system", content: ai1Prompt });
-}
-
-messages.push({ role: "user", content: lastMessage });
-
+    const messages = [
+      { role: "system", content: ai1Prompt }, // always use AI #1's prompt
+      { role: "user", content: lastMessage },
     ];
 
     const result = await groq.chat.completions.create({
