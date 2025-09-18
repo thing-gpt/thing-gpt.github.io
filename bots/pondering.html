@@ -72,6 +72,10 @@
 
     let apiKey = null;
 
+    function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
     async function loadGroqKey() {
       try {
         const res = await fetch('https://thinggptapi.vercel.app/plaintext.js', {
@@ -112,7 +116,6 @@
         chatWindow.innerHTML = "";
         addMessage("system", `AI Prompt updated: "${aiPrompt}"`);
       });
-
 sendBtn.addEventListener("click", async () => {
   const userText = inputField.value.trim();
   if (!userText) return;
@@ -127,8 +130,8 @@ sendBtn.addEventListener("click", async () => {
   const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
 
   // Persona prompts
-  const proPrompt = "You are AI #1. Always argue in favor of the topic. Always have a 'glass half full' way. Support your reasoning with opinions, not facts. Leave your response fairly short.";
-  const conPrompt = "You are AI #2. Always argue against the topic. Always have a 'glass half empty' way. Support your reasoning with facts and opinions. Leave your response fairly short.";
+  const proPrompt = "You are AI #1. Always argue in favor of the topic. Always have a 'glass half full' way. Support your reasoning with opinions, not facts. Leave your response fairly short. Be full of personality.";
+  const conPrompt = "You are AI #2. Always argue against the topic. Always have a 'glass half empty' way. Support your reasoning with facts and opinions. Leave your response fairly short. Be full of personality.";
 
   let lastMessage = userText;
 
@@ -151,6 +154,11 @@ sendBtn.addEventListener("click", async () => {
       addMessage("assistant", `[${role}] ${aiResponse}`);
 
       lastMessage = aiResponse; // pass this to the next AI
+
+      // wait 5–10 seconds before next turn
+      const delay = 5000 + Math.random() * 5000; // 5000–10000ms
+      await sleep(delay);
+
     } catch (err) {
       console.error(err);
       addMessage("assistant", `[${role}] [Error getting response.]`);
@@ -158,6 +166,7 @@ sendBtn.addEventListener("click", async () => {
     }
   }
 });
+
 
       clearBtn.addEventListener("click", () => {
         localStorage.removeItem("chatHistoryP");
