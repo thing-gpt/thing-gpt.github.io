@@ -10,20 +10,16 @@
       display: none;
     }
     .ai1-bubble {
-    background-color: #d1f7d6;
-    border-left: 4px solid green;
-  }
+      background-color: #d1f7d6;
+      border-left: 4px solid green;
+    }
     .ai2-bubble {
-    background-color: #f7d6d6;
-    border-left: 4px solid red;
-  }
-
-
+      background-color: #f7d6d6;
+      border-left: 4px solid red;
+    }
   </style>
 </head>
 <body>
-
-
   <h2>Test Chat</h2>
 
   <!-- Main Chat Section -->
@@ -35,6 +31,7 @@
     <textarea id="promptInput" placeholder="Enter prompt for the AI..."></textarea>
     <button id="applyPromptBtn">Apply Prompt</button>
     <button id="clearBtn" class="clear-btn">Clear Chat</button>
+    <button id="stopBtn" class="stop-btn">Stop</button>
   </div>
 
   <!-- Input Section below chat window -->
@@ -61,20 +58,22 @@
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
     
     const supabaseUrl = "https://qcdmvyhxhkwkvmrvtfhd.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjZG12eWh4aGt3a3ZtcnZ0ZmhkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDI0MjQ2OCwiZXhwIjoyMDU5ODE4NDY4fQ.4KLPIJqE_TsNVnM5-sdBaaVOQHYQJNkMfwcB17_1zzQ";
+    const supabaseKey = "YOUR_SUPABASE_KEY";
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
     const chatWindow = document.getElementById("chatWindow");
     const inputField = document.getElementById("myText");
     const sendBtn = document.getElementById("sendBtn");
     const clearBtn = document.getElementById("clearBtn");
     const applyPromptBtn = document.getElementById("applyPromptBtn");
+    const stopBtn = document.getElementById("stopBtn");
     const promptInput = document.getElementById("promptInput");
 
     let apiKey = null;
+    let stopRequested = false; // NEW FLAG
 
     function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     async function loadGroqKey() {
       try {
@@ -98,7 +97,7 @@
       
       let conversationHistory = JSON.parse(localStorage.getItem("chatHistoryP")) || [];
       let aiPrompt = localStorage.getItem("aiPrompt") || "";
-      promptInput.value = aiPrompt; // Initialize prompt input with stored value
+      promptInput.value = aiPrompt;
       renderHistory(conversationHistory);
 
       inputField.addEventListener("keydown", (event) => {
@@ -116,57 +115,65 @@
         chatWindow.innerHTML = "";
         addMessage("system", `AI Prompt updated: "${aiPrompt}"`);
       });
-sendBtn.addEventListener("click", async () => {
-  const userText = inputField.value.trim();
-  if (!userText) return;
-  if (!apiKey) {
-    addMessage("system", "Error: API key not loaded. Please try again later.");
-    return;
-  }
 
-  addMessage("user", userText);
-  inputField.value = "";
-
-  const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
-
-  // Persona prompts
-  const proPrompt = "You are AI #1. Always argue in favor of the topic. Always have a 'glass half full' way. Support your reasoning with opinions, not facts. Leave your response fairly short. Be full of personality.";
-  const conPrompt = "You are AI #2. Always argue against the topic. Always have a 'glass half empty' way. Support your reasoning with facts and opinions. Leave your response fairly short. Be full of personality.";
-
-  let lastMessage = userText;
-
-  for (let i = 0; i < 10; i++) { 
-    const currentPrompt = i % 2 === 0 ? proPrompt : conPrompt;
-    const role = i % 2 === 0 ? "AI #1" : "AI #2";
-
-    try {
-      const messages = [
-        { role: "system", content: currentPrompt },
-        { role: "user", content: lastMessage }
-      ];
-
-      const result = await groq.chat.completions.create({
-        messages,
-        model: "llama-3.3-70b-versatile",
+      // Stop button
+      stopBtn.addEventListener("click", () => {
+        stopRequested = true;
+        addMessage("system", "AI conversation stopped.");
       });
 
-      const aiResponse = result.choices[0]?.message?.content || "No response.";
-      addMessage("assistant", `[${role}] ${aiResponse}`);
+      sendBtn.addEventListener("click", async () => {
+        const userText = inputField.value.trim();
+        if (!userText) return;
+        if (!apiKey) {
+          addMessage("system", "Error: API key not loaded. Please try again later.");
+          return;
+        }
 
-      lastMessage = aiResponse; // pass this to the next AI
+        addMessage("user", userText);
+        inputField.value = "";
+        stopRequested = false; // reset each time a new chat starts
 
-      // wait 5–10 seconds before next turn
-      const delay = 5000 + Math.random() * 5000; // 5000–10000ms
-      await sleep(delay);
+        const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
 
-    } catch (err) {
-      console.error(err);
-      addMessage("assistant", `[${role}] [Error getting response.]`);
-      break;
-    }
-  }
-});
+        const proPrompt = "You are AI #1. Always argue in favor of the topic. Always have a 'glass half full' way. Support your reasoning with opinions, not facts. Leave your response fairly short. Be full of personality.";
+        const conPrompt = "You are AI #2. Always argue against the topic. Always have a 'glass half empty' way. Support your reasoning with facts and opinions. Leave your response fairly short. Be full of personality.";
 
+        let lastMessage = userText;
+
+        for (let i = 0; i < 10; i++) { 
+          if (stopRequested) break; // ✅ Stop if user requested
+
+          const currentPrompt = i % 2 === 0 ? proPrompt : conPrompt;
+          const role = i % 2 === 0 ? "AI #1" : "AI #2";
+
+          try {
+            const messages = [
+              { role: "system", content: currentPrompt },
+              { role: "user", content: lastMessage }
+            ];
+
+            const result = await groq.chat.completions.create({
+              messages,
+              model: "llama-3.3-70b-versatile",
+            });
+
+            const aiResponse = result.choices[0]?.message?.content || "No response.";
+            addMessage("assistant", `[${role}] ${aiResponse}`);
+
+            lastMessage = aiResponse;
+
+            // wait 5–10 seconds before next turn
+            const delay = 5000 + Math.random() * 5000;
+            await sleep(delay);
+
+          } catch (err) {
+            console.error(err);
+            addMessage("assistant", `[${role}] [Error getting response.]`);
+            break;
+          }
+        }
+      });
 
       clearBtn.addEventListener("click", () => {
         localStorage.removeItem("chatHistoryP");
@@ -177,11 +184,9 @@ sendBtn.addEventListener("click", async () => {
         chatWindow.innerHTML = "";
       });
 
-
-          async function addMessage(role, content) {
+      async function addMessage(role, content) {
         const msg = { role, content };
         conversationHistory.push(msg);
-        console.log(content);
         localStorage.setItem("chatHistoryP", JSON.stringify(conversationHistory));
         chatWindow.appendChild(createMessageBubble(msg));
         chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -204,35 +209,29 @@ sendBtn.addEventListener("click", async () => {
       }
 
       function createMessageBubble({ role, content }) {
-  const div = document.createElement("div");
+        const div = document.createElement("div");
 
-  if (role === "assistant") {
-    if (content.startsWith("[AI #1]")) {
-      div.className = "ai1-bubble";
-    } else if (content.startsWith("[AI #2]")) {
-      div.className = "ai2-bubble";
-    } else {
-      div.className = "ai-bubble"; // fallback
-    }
-  } else if (role === "user") {
-    div.className = "user-bubble";
-  } else {
-    div.className = "system-bubble";
-  }
+        if (role === "assistant") {
+          if (content.startsWith("[AI #1]")) {
+            div.className = "ai1-bubble";
+          } else if (content.startsWith("[AI #2]")) {
+            div.className = "ai2-bubble";
+          } else {
+            div.className = "ai-bubble"; 
+          }
+        } else if (role === "user") {
+          div.className = "user-bubble";
+        } else {
+          div.className = "system-bubble";
+        }
 
-  // strip the "[AI #1]" or "[AI #2]" label when displaying
-  let displayContent = content.replace(/^\[AI #[12]\]\s*/, "");
+        let displayContent = content.replace(/^\[AI #[12]\]\s*/, "");
+        displayContent = displayContent.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+        displayContent = displayContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
 
-  // formatting replacements
-  displayContent = displayContent.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-  displayContent = displayContent.replace(/:trol:/g, '<img src="/img/trollface.png" alt="troll" class="chat-emoji" width="24" height="24">');
-
-  div.innerHTML = displayContent;
-  return div;
-}
-
-
-      
+        div.innerHTML = displayContent;
+        return div;
+      }
     });
   </script>
 </body>
