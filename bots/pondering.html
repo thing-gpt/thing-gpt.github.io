@@ -16,18 +16,7 @@
   </style>
 </head>
 <body>
-  <!-- Disclaimer Overlay -->
-  <div id="disclaimerOverlay">
-    <div id="disclaimerContent">
-      <p>
-        By using this service, you agree to our
-        <a href="tos" target="_blank">Terms of Service</a> and
-        <a href="PrPy" target="_blank">Privacy Policy</a>.
-        Please read carefully.
-      </p>
-      <button id="dismissDisclaimer">OKAY</button>
-    </div>
-  </div>
+
 
   <h2>Test Chat</h2>
 
@@ -74,7 +63,7 @@
     const clearBtn = document.getElementById("clearBtn");
     const applyPromptBtn = document.getElementById("applyPromptBtn");
     const promptInput = document.getElementById("promptInput");
-    const disclaimerOverlay = document.getElementById("disclaimerOverlay");
+
     let apiKey = null;
 
     async function loadGroqKey() {
@@ -225,15 +214,7 @@ sendBtn.addEventListener("click", async () => {
         return div;
       }
 
-      document.getElementById("dismissDisclaimer").addEventListener("click", () => {
-        disclaimerOverlay.style.display = "none";
-        chatWindow.style.pointerEvents = "auto";
-        chatWindow.style.opacity = "1";
-        document.querySelectorAll('.side-panel, .input-section').forEach(el => {
-          el.style.pointerEvents = "auto";
-          el.style.opacity = "1";
-        });
-      });
+      
     });
   </script>
 </body>
