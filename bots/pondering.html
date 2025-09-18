@@ -26,13 +26,18 @@
   <div id="chatWindow"></div>
 
   <!-- Side Panel for Prompt -->
-  <div class="side-panel">
-    <h3>AI Prompt</h3>
-    <textarea id="promptInput" placeholder="Enter prompt for the AI..."></textarea>
-    <button id="applyPromptBtn">Apply Prompt</button>
-    <button id="clearBtn" class="clear-btn">Clear Chat</button>
-    <button id="stopBtn" class="stop-btn">Stop</button>
-  </div>
+<div class="side-panel">
+  <h3>AI Prompts</h3>
+  <label for="ai1Prompt">AI #1 Prompt</label>
+  <textarea id="ai1Prompt" placeholder="Enter prompt for AI #1..."></textarea>
+
+  <label for="ai2Prompt">AI #2 Prompt</label>
+  <textarea id="ai2Prompt" placeholder="Enter prompt for AI #2..."></textarea>
+
+  <button id="applyPromptBtn">Apply Prompts</button>
+  <button id="clearBtn" class="clear-btn">Clear Chat</button>
+  <button id="stopBtn" class="stop-btn">Stop</button>
+</div>
 
   <!-- Input Section below chat window -->
   <div class="input-section">
@@ -58,7 +63,7 @@
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
     
     const supabaseUrl = "https://qcdmvyhxhkwkvmrvtfhd.supabase.co";
-    const supabaseKey = "YOUR_SUPABASE_KEY";
+    const supabaseKey = "filler";
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
     const chatWindow = document.getElementById("chatWindow");
     const inputField = document.getElementById("myText");
@@ -96,25 +101,25 @@
       await loadGroqKey();
       
       let conversationHistory = JSON.parse(localStorage.getItem("chatHistoryP")) || [];
-      let aiPrompt = localStorage.getItem("aiPrompt") || "";
-      promptInput.value = aiPrompt;
-      renderHistory(conversationHistory);
+      let ai1Prompt = localStorage.getItem("ai1Prompt") || 
+  "You are AI #1. Always argue in favor of the topic. Always have a 'glass half full' way. Support your reasoning with opinions, not facts. Leave your response fairly short. Be full of personality.";
 
-      inputField.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" && !event.shiftKey) {
-          event.preventDefault();
-          sendBtn.click();
-        }
-      });
+let ai2Prompt = localStorage.getItem("ai2Prompt") || 
+  "You are AI #2. Always argue against the topic. Always have a 'glass half empty' way. Support your reasoning with facts and opinions. Leave your response fairly short. Be full of personality.";
 
-      applyPromptBtn.addEventListener("click", () => {
-        aiPrompt = promptInput.value.trim();
-        localStorage.setItem("aiPrompt", aiPrompt);
-        localStorage.removeItem("chatHistoryP");
-        conversationHistory = [];
-        chatWindow.innerHTML = "";
-        addMessage("system", `AI Prompt updated: "${aiPrompt}"`);
-      });
+document.getElementById("ai1Prompt").value = ai1Prompt;
+document.getElementById("ai2Prompt").value = ai2Prompt;
+
+applyPromptBtn.addEventListener("click", () => {
+  ai1Prompt = document.getElementById("ai1Prompt").value.trim();
+  ai2Prompt = document.getElementById("ai2Prompt").value.trim();
+  localStorage.setItem("ai1Prompt", ai1Prompt);
+  localStorage.setItem("ai2Prompt", ai2Prompt);
+  localStorage.removeItem("chatHistoryP");
+  conversationHistory = [];
+  chatWindow.innerHTML = "";
+  addMessage("system", `Prompts updated for AI #1 and AI #2.`);
+});
 
       // Stop button
       stopBtn.addEventListener("click", () => {
@@ -136,8 +141,9 @@
 
         const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
 
-        const proPrompt = "You are AI #1. Always argue in favor of the topic. Always have a 'glass half full' way. Support your reasoning with opinions, not facts. Leave your response fairly short. Be full of personality.";
-        const conPrompt = "You are AI #2. Always argue against the topic. Always have a 'glass half empty' way. Support your reasoning with facts and opinions. Leave your response fairly short. Be full of personality.";
+        const currentPrompt = i % 2 === 0 ? ai1Prompt : ai2Prompt;
+        const role = i % 2 === 0 ? "AI #1" : "AI #2";
+
 
         let lastMessage = userText;
 
@@ -177,9 +183,15 @@
 
       clearBtn.addEventListener("click", () => {
         localStorage.removeItem("chatHistoryP");
-        localStorage.removeItem("aiPrompt");
+localStorage.removeItem("ai1Prompt");
+localStorage.removeItem("ai2Prompt");
+document.getElementById("ai1Prompt").value = "";
+document.getElementById("ai2Prompt").value = "";
+ai1Prompt = "";
+ai2Prompt = "";
+
         conversationHistory = [];
-        aiPrompt = "";
+
         promptInput.value = "";
         chatWindow.innerHTML = "";
       });
