@@ -160,37 +160,42 @@
 
         let lastMessage = userText;
 
-        for (let i = 0; i < 10; i++) {
-          if (stopRequested) break;
+for (let i = 0; i < 10; i++) {
+  if (stopRequested) break;
 
-          const currentPrompt = i % 2 === 0 ? ai1Prompt : ai2Prompt;
-          const role = i % 2 === 0 ? "AI #1" : "AI #2";
+  const isAi1Turn = i % 2 === 0;
+  const role = isAi1Turn ? "AI #1" : "AI #2";
 
-          try {
-            const messages = [
-              { role: "system", content: currentPrompt },
-              { role: "user", content: lastMessage },
-            ];
+  try {
+const messages = [];
 
-            const result = await groq.chat.completions.create({
-              messages,
-              model: "llama-3.3-70b-versatile",
-            });
+if (isAi1Turn) {
+  messages.push({ role: "system", content: ai1Prompt });
+}
 
-            const aiResponse = result.choices[0]?.message?.content || "No response.";
-            addMessage("assistant", `[${role}] ${aiResponse}`);
+messages.push({ role: "user", content: lastMessage });
 
-            lastMessage = aiResponse;
+    ];
 
-            // wait 5–10 seconds before next turn
-            const delay = 5000 + Math.random() * 5000;
-            await sleep(delay);
-          } catch (err) {
-            console.error(err);
-            addMessage("assistant", `[${role}] [Error getting response.]`);
-            break;
-          }
-        }
+    const result = await groq.chat.completions.create({
+      messages,
+      model: "llama-3.3-70b-versatile",
+    });
+
+    const aiResponse = result.choices[0]?.message?.content || "No response.";
+    addMessage("assistant", `[${role}] ${aiResponse}`);
+
+    lastMessage = aiResponse;
+
+    const delay = 5000 + Math.random() * 5000;
+    await sleep(delay);
+  } catch (err) {
+    console.error(err);
+    addMessage("assistant", `[${role}] [Error getting response.]`);
+    break;
+  }
+}
+
       });
 
       clearBtn.addEventListener("click", () => {
