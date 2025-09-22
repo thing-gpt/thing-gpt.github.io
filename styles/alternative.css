@@ -20,7 +20,7 @@ body {
 #chatWindow {
     border: 1px solid #ccc;
     padding: 10px;
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -28,7 +28,7 @@ body {
     gap: 8px;
     margin-bottom: 10px;
     border-radius: 8px;
-    width: 50%;
+    width: 80%;
     margin-left: auto;
 }
 
@@ -91,7 +91,7 @@ button:hover {
 
 /* Styling for input section - now positioned below chat */
 .input-section {
-    width: 50%; 
+    width: 80%; 
     margin-left: auto; /* Push to the right to align with chat window */
     display: flex;
     flex-direction: column;
