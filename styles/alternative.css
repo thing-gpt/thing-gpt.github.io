@@ -55,6 +55,7 @@ body {
 /* Side panel for prompt */
 .side-panel {
     width: 300px;
+    margin-left: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
