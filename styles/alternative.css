@@ -176,15 +176,15 @@ em {
 .saul-image {
   width: 250px;
   height: 500px;
-  border: 7px solid black;
-  display: flex;              /* keeps the img centered */
+  border: 7px solid black;  /* border is now around the frame */
+  display: flex;
   align-items: center;
   justify-content: center;
-  background: white;          /* optional if you want a solid backdrop */
+  background: white;        /* optional, gives a clean backdrop */
 }
 
 .saul-image img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* keeps aspect ratio without squishing */
+  object-fit: contain;      /* scale without squishing */
 }
