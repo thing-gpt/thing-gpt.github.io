@@ -170,6 +170,7 @@ em {
     align-self: flex-start; 
     margin-bottom: 20px; 
     margin-left: 50px;
+    object-fit: contain;
     border-radius: 10px;
     border-color: black;
 }
