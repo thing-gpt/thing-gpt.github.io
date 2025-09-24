@@ -176,7 +176,6 @@ em {
 .saul-image {
   width: 250px;
   height: 500px;
-  border: 7px solid black;  /* border is now around the frame */
   display: flex;
   align-items: center;
   justify-content: center;
