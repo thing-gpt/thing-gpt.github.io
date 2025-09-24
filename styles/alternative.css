@@ -179,7 +179,8 @@ em {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;        /* optional, gives a clean backdrop */
+  background: white; 
+  border: 7px black;       /* optional, gives a clean backdrop */
 }
 
 .saul-image img {
