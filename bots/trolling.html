@@ -9,10 +9,7 @@
     .hidden-thought {
       display: none;
     }
-    #sendBtn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+
     .user-bubble {
       background: #0078ff;
       color: white;
@@ -52,16 +49,7 @@
 </head>
 <body>
   <!-- Disclaimer Overlay -->
-  <div id="disclaimerOverlay">
-    <div id="disclaimerContent">
-      <p>
-        By using this service, you agree to our
-        <a href="tos" target="_blank">Terms of Service</a> and
-        <a href="PrPy" target="_blank">Privacy Policy</a>.
-      </p>
-      <button id="dismissDisclaimer">OKAY</button>
-    </div>
-  </div>
+
 
   <h2>Thing Chat</h2>
 
@@ -93,10 +81,6 @@
     localStorage.setItem('id', user_id);
     console.log("User ID:", user_id);
 
-    // Dismiss disclaimer
-    document.getElementById("dismissDisclaimer").addEventListener("click", () => {
-      disclaimerOverlay.style.display = "none";
-    });
 
     // Send message
     sendBtn.addEventListener("click", createMessage);
@@ -155,15 +139,7 @@
 
     // Refresh messages every 500ms
     setInterval(viewMessages, 500);
-          document.getElementById("dismissDisclaimer").addEventListener("click", () => {
-        disclaimerOverlay.style.display = "none";
-        chatWindow.style.pointerEvents = "auto";
-        chatWindow.style.opacity = "1";
-        document.querySelectorAll('.side-panel, .input-section').forEach(el => {
-          el.style.pointerEvents = "auto";
-          el.style.opacity = "1";
-        });
-      });
+
   
   </script>
 </body>
