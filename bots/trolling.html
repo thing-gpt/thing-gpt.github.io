@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Thing-GPT (Supabase Chat)</title>
+  <link rel="stylesheet" href="/styles/ogstyle.css">
+  <meta name="google-adsense-account" content="ca-pub-6553820111354942">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      text-align: center;
+      padding: 10px;
+      background-color: #004aad;
+      color: white;
+    }
+
+    #chatWindow {
+      width: 70%;
+      margin: 20px auto;
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .user-bubble {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 20px;
+      margin: 8px 0;
+      text-align: right;
+      width: fit-content;
+      margin-left: auto;
+      max-width: 80%;
+    }
+
+    .ai-bubble {
+      background-color: #e9ecef;
+      color: #222;
+      padding: 10px 14px;
+      border-radius: 20px;
+      margin: 8px 0;
+      text-align: left;
+      width: fit-content;
+      max-width: 80%;
+    }
+
+    .side-panel {
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      width: 250px;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    }
+
+    textarea {
+      width: 100%;
+      height: 60px;
+      resize: none;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .input-section {
+      width: 70%;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #userIdDisplay {
+      text-align: center;
+      color: #555;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Supabase Chat</h2>
+
+  <div id="userIdDisplay"></div>
+
+  <!-- Main Chat Section -->
+  <div id="chatWindow"></div>
+
+  <!-- Side Panel -->
+  <div class="side-panel">
+    <h3>Settings</h3>
+    <textarea id="promptInput" placeholder="(Unused prompt area)"></textarea>
+    <button id="clearBtn">Clear Chat</button>
+  </div>
+
+  <!-- Input Section -->
+  <div class="input-section">
+    <input type="text" id="myText" placeholder="Type a message...">
+    <button id="sendBtn">Send</button>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabaseUrl = "https://ylfnsodkmjyzqwkjqzaf.supabase.co";
+    const supabaseKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsZm5zb2RrbWp5enF3a2pxemFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MjY5MzIsImV4cCI6MjA3MDIwMjkzMn0.s_x9Jjc5Qutd6edfxQuSzuLNQY3mBjeH_tYan7lxoJ0";
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+    const chatWindow = document.getElementById("chatWindow");
+    const inputField = document.getElementById("myText");
+    const sendBtn = document.getElementById("sendBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    // Create or load user ID
+    let id = localStorage.getItem("id") || "_" + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("id", id);
+    document.getElementById("userIdDisplay").innerText = `You are: ${id}`;
+
+    // Load messages
+    async function loadMessages() {
+      const { data, error } = await supabaseClient
+        .from("ChatLogz")
+        .select("*")
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      chatWindow.innerHTML = "";
+      data.forEach((msg) => addMessage(msg.user_id === id ? "user" : "assistant", msg.message, msg.user_id));
+    }
+
+    // Add message bubble
+    function addMessage(role, content, user = "") {
+      const div = document.createElement("div");
+      div.className = role === "user" ? "user-bubble" : "ai-bubble";
+      div.innerHTML = role === "user" ? content : `<strong>${user}:</strong> ${content}`;
+      chatWindow.appendChild(div);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    // Send message
+    async function sendMessage() {
+      const message = inputField.value.trim();
+      if (!message) return;
+
+      addMessage("user", message);
+      inputField.value = "";
+
+      const { error } = await supabaseClient
+        .from("ChatLogz")
+        .insert([{ user_id: id, message }]);
+
+      if (error) console.error(error);
+    }
+
+    // Live subscription (auto updates on new messages)
+    supabaseClient
+      .channel("chat-updates")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "ChatLogz" }, (payload) => {
+        const msg = payload.new;
+        if (msg.user_id !== id) addMessage("assistant", msg.message, msg.user_id);
+      })
+      .subscribe();
+
+    // Event listeners
+    sendBtn.addEventListener("click", sendMessage);
+    inputField.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      chatWindow.innerHTML = "";
+      console.log("Chat cleared locally");
+    });
+
+    // Initial load
+    loadMessages();
+  </script>
+</body>
+</html>
