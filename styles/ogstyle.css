@@ -135,11 +135,7 @@ color: #555; /* Optional: make slanted text gray */
       background-color: #45a049;
     }
 
-    /* Ensure chat window is disabled until the disclaimer is dismissed */
-    #chatWindow, .side-panel, .input-section {
-      pointer-events: none;
-      opacity: 0.5;
-    }
+
     .modal-link {
   text-decoration: underline;
   color: #4ecdc4;
