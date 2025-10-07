@@ -155,6 +155,16 @@
 
     // Refresh messages every 500ms
     setInterval(viewMessages, 500);
+          document.getElementById("dismissDisclaimer").addEventListener("click", () => {
+        disclaimerOverlay.style.display = "none";
+        chatWindow.style.pointerEvents = "auto";
+        chatWindow.style.opacity = "1";
+        document.querySelectorAll('.side-panel, .input-section').forEach(el => {
+          el.style.pointerEvents = "auto";
+          el.style.opacity = "1";
+        });
+      });
+  o
   </script>
 </body>
 </html>
