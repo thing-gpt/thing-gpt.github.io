@@ -2,218 +2,159 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Thing-GPT (Supabase Chat)</title>
+  <title>Thing Chat</title>
   <link rel="stylesheet" href="/styles/ogstyle.css">
   <meta name="google-adsense-account" content="ca-pub-6553820111354942">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
+    .hidden-thought {
+      display: none;
     }
-
-    h2 {
-      text-align: center;
-      padding: 10px;
-      background-color: #004aad;
-      color: white;
+    #sendBtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
-
-    #chatWindow {
-      width: 70%;
-      margin: 20px auto;
-      background: #fff;
-      padding: 15px;
-      border-radius: 12px;
-      height: 400px;
-      overflow-y: auto;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-    }
-
     .user-bubble {
-      background-color: #007bff;
+      background: #0078ff;
       color: white;
-      padding: 10px 14px;
-      border-radius: 20px;
-      margin: 8px 0;
-      text-align: right;
-      width: fit-content;
-      margin-left: auto;
-      max-width: 80%;
-    }
-
-    .ai-bubble {
-      background-color: #e9ecef;
-      color: #222;
-      padding: 10px 14px;
-      border-radius: 20px;
-      margin: 8px 0;
-      text-align: left;
-      width: fit-content;
-      max-width: 80%;
-    }
-
-    .side-panel {
-      position: fixed;
-      top: 60px;
-      right: 20px;
-      background: white;
-      padding: 15px;
+      padding: 10px;
+      margin: 8px;
       border-radius: 10px;
-      width: 250px;
-      box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+      max-width: 60%;
+      align-self: flex-end;
     }
-
-    textarea {
-      width: 100%;
-      height: 60px;
-      resize: none;
-      padding: 8px;
-      border-radius: 6px;
+    .ai-bubble {
+      background: #e5e5ea;
+      color: black;
+      padding: 10px;
+      margin: 8px;
+      border-radius: 10px;
+      max-width: 60%;
+      align-self: flex-start;
+    }
+    #chatWindow {
       border: 1px solid #ccc;
-    }
-
-    .input-section {
-      width: 70%;
-      margin: 0 auto 30px;
+      padding: 10px;
+      height: 400px;
+      overflow-y: scroll;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+    }
+    .input-section {
+      margin-top: 10px;
+      display: flex;
       gap: 10px;
     }
-
-    input[type="text"] {
+    #myText {
       flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    #userIdDisplay {
-      text-align: center;
-      color: #555;
-      margin-bottom: 10px;
+      padding: 8px;
     }
   </style>
 </head>
 <body>
-  <h2>Supabase Chat</h2>
+  <!-- Disclaimer Overlay -->
+  <div id="disclaimerOverlay">
+    <div id="disclaimerContent">
+      <p>
+        By using this service, you agree to our
+        <a href="tos" target="_blank">Terms of Service</a> and
+        <a href="PrPy" target="_blank">Privacy Policy</a>.
+      </p>
+      <button id="dismissDisclaimer">OKAY</button>
+    </div>
+  </div>
 
-  <div id="userIdDisplay"></div>
+  <h2>Thing Chat</h2>
 
   <!-- Main Chat Section -->
   <div id="chatWindow"></div>
 
-  <!-- Side Panel -->
-  <div class="side-panel">
-    <h3>Settings</h3>
-    <textarea id="promptInput" placeholder="(Unused prompt area)"></textarea>
-    <button id="clearBtn">Clear Chat</button>
-  </div>
-
-  <!-- Input Section -->
+  <!-- Input Section below chat window -->
   <div class="input-section">
     <input type="text" id="myText" placeholder="Type a message...">
-    <button id="sendBtn">Send</button>
+    <button id="sendBtn" value="send">Send</button>
   </div>
 
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    const supabaseUrl = "https://ylfnsodkmjyzqwkjqzaf.supabase.co";
-    const supabaseKey =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsZm5zb2RrbWp5enF3a2pxemFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MjY5MzIsImV4cCI6MjA3MDIwMjkzMn0.s_x9Jjc5Qutd6edfxQuSzuLNQY3mBjeH_tYan7lxoJ0";
-    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+    // Initialize Supabase
+    const supabaseClient = createClient(
+      'https://ylfnsodkmjyzqwkjqzaf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsZm5zb2RrbWp5enF3a2pxemFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MjY5MzIsImV4cCI6MjA3MDIwMjkzMn0.s_x9Jjc5Qutd6edfxQuSzuLNQY3mBjeH_tYan7lxoJ0'
+    );
 
     const chatWindow = document.getElementById("chatWindow");
     const inputField = document.getElementById("myText");
     const sendBtn = document.getElementById("sendBtn");
-    const clearBtn = document.getElementById("clearBtn");
+    const disclaimerOverlay = document.getElementById("disclaimerOverlay");
 
-    // Create or load user ID
-    let id = localStorage.getItem("id") || "_" + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem("id", id);
-    document.getElementById("userIdDisplay").innerText = `You are: ${id}`;
+    // Generate a unique user ID
+    const user_id = localStorage.getItem('id') || '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('id', user_id);
+    console.log("User ID:", user_id);
 
-    // Load messages
-    async function loadMessages() {
-      const { data, error } = await supabaseClient
-        .from("ChatLogz")
-        .select("*")
-        .order("id", { ascending: true });
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      chatWindow.innerHTML = "";
-      data.forEach((msg) => addMessage(msg.user_id === id ? "user" : "assistant", msg.message, msg.user_id));
-    }
-
-    // Add message bubble
-    function addMessage(role, content, user = "") {
-      const div = document.createElement("div");
-      div.className = role === "user" ? "user-bubble" : "ai-bubble";
-      div.innerHTML = role === "user" ? content : `<strong>${user}:</strong> ${content}`;
-      chatWindow.appendChild(div);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
+    // Dismiss disclaimer
+    document.getElementById("dismissDisclaimer").addEventListener("click", () => {
+      disclaimerOverlay.style.display = "none";
+    });
 
     // Send message
-    async function sendMessage() {
-      const message = inputField.value.trim();
-      if (!message) return;
-
-      addMessage("user", message);
-      inputField.value = "";
-
-      const { error } = await supabaseClient
-        .from("ChatLogz")
-        .insert([{ user_id: id, message }]);
-
-      if (error) console.error(error);
-    }
-
-    // Live subscription (auto updates on new messages)
-    supabaseClient
-      .channel("chat-updates")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "ChatLogz" }, (payload) => {
-        const msg = payload.new;
-        if (msg.user_id !== id) addMessage("assistant", msg.message, msg.user_id);
-      })
-      .subscribe();
-
-    // Event listeners
-    sendBtn.addEventListener("click", sendMessage);
+    sendBtn.addEventListener("click", createMessage);
     inputField.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        sendMessage();
+        createMessage();
       }
     });
 
-    clearBtn.addEventListener("click", () => {
-      chatWindow.innerHTML = "";
-      console.log("Chat cleared locally");
-    });
+    async function createMessage() {
+      const message = inputField.value.trim();
+      if (!message) return;
 
-    // Initial load
-    loadMessages();
+      inputField.value = "";
+
+      try {
+        const { error } = await supabaseClient
+          .from("ChatLogz")
+          .insert([{ user_id, message }]);
+        if (error) {
+          console.error("Insert error:", error);
+        }
+      } catch (err) {
+        console.error("Unexpected error:", err);
+      }
+    }
+
+    async function viewMessages() {
+      try {
+        const { data, error } = await supabaseClient
+          .from("ChatLogz")
+          .select("*")
+          .order("id", { ascending: true });
+        if (error) {
+          console.error("Select error:", error);
+          return;
+        }
+
+        renderChat(data);
+      } catch (err) {
+        console.error("Unexpected error:", err);
+      }
+    }
+
+    function renderChat(messages) {
+      chatWindow.innerHTML = "";
+      messages.forEach((row) => {
+        const div = document.createElement("div");
+        div.className = row.user_id === user_id ? "user-bubble" : "ai-bubble";
+        div.innerText = row.user_id + ": " + row.message;
+        chatWindow.appendChild(div);
+      });
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    // Refresh messages every 500ms
+    setInterval(viewMessages, 500);
   </script>
 </body>
 </html>
