@@ -167,6 +167,7 @@
 
       async function addMessage(role, content) {
         const delay = 5000 + Math.random() * 5000;
+        await sleep(delay);
         const msg = { role, content };
         conversationHistory.push(msg);
         console.log(content);
