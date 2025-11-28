@@ -76,6 +76,10 @@
     const promptInput = document.getElementById("promptInput");
     const disclaimerOverlay = document.getElementById("disclaimerOverlay");
     let apiKey = null;
+    
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     async function loadGroqKey() {
       try {
