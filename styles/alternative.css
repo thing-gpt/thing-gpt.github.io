@@ -12,7 +12,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    margin-top: auto;
+    margin-bottom: 20px; 
     width: 100%;
 }
 
