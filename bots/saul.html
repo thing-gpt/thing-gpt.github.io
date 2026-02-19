@@ -41,7 +41,10 @@
   </style>
 </head>
 <body>
-  <source id="ding" src="/sound/bell.mp3" type="audio/mp3">
+  <audio id="ding" preload="auto">
+  <source src="/sound/bell.mp3" type="audio/mpeg">
+</audio>
+
   <div class="toolbar">
     <div class="toolbar-header">
   <h1>Thing-GPT</h1>
@@ -179,7 +182,6 @@
         addMessage("assistant", aiResponse);
         if (document.visibilityState === "visible") {
         document.title = "Thing-GPT";
-        source.play("sound/bell.mp3")
         } else {
         document.title = "Saul has Responded!";
         ding.play();
