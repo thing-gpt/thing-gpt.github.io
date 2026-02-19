@@ -175,7 +175,7 @@
 
         const aiResponse = result.choices[0]?.message?.content || "No response.";
         addMessage("assistant", aiResponse);
-        if (navigator.userActivation.isActive) {
+        if (document.visibilityState === "visible") {
         document.title = "Thing-GPT";
         } else {
         document.title = "Saul has Responded!";
