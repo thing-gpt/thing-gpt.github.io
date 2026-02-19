@@ -175,6 +175,11 @@
 
         const aiResponse = result.choices[0]?.message?.content || "No response.";
         addMessage("assistant", aiResponse);
+        if (navigator.userActivation.isActive) {
+        document.title = "Thing-GPT";
+        } else {
+        document.title = "Saul has Responded!";S
+        }
       } catch (err) {
         console.error(err);
         addMessage("assistant", "[Error getting response, please try again.]");
@@ -206,6 +211,7 @@
         console.error("Error inserting into Supabase:", err);
       }
     }
+
 
     function renderHistory(history) {
       history.forEach((msg) => {

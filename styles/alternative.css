@@ -9,6 +9,7 @@ body {
 
 /* Chat container to position chat window on the right */
 .chat-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -76,7 +77,6 @@ body {
 
 button {
     height: 34px;
-    width: 100%;
     border: none;
     background-color: #28a745;
     color: white;
