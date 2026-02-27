@@ -9,7 +9,7 @@ body {
 
 /* Chat container to position chat window on the right */
 .chat-container {
-    width: 100%;
+    width: 500px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -22,7 +22,7 @@ body {
 #chatWindow {
     border: 1px solid #ccc;
     padding: 10px;
-    height: 100%;
+    height: 400px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
