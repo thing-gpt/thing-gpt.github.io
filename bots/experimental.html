@@ -41,15 +41,7 @@
   </style>
 </head>
 <body>
-  <audio id="ding" preload="auto">
-  <source src="/sound/bell.mp3" type="audio/mpeg">
-</audio>
 
-  <div class="toolbar">
-    <div class="toolbar-header">
-  <h1>Thing-GPT</h1>
-  </div>
-  </div>
   <div class="chat-container">
     <div id="chatWindow"></div>
       <div class="send-section">
@@ -73,15 +65,6 @@
   const sendBtn = document.getElementById("sendBtn");
   const clearBtn = document.getElementById("clearBtn");
 
-  // Mapping of hashtags to image URLs
-  const moodImages = {
-    '#happy': '/img/saul/bettercalljimmy.png',
-    '#serious': '/img/saul/saulgoodman.png',
-    '#default': '/img/saul/bettercalljimmy.png',
-    '#mad': '/img/saul/run.png',
-    '#sad': '/img/saul/sad.png',
-    '#calling': '/img/saul/calling.png'
-  };
 
   // Array of URLs, each providing a single API key
   const apiKeyUrls = [
