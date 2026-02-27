@@ -20,7 +20,7 @@ body {
 
 /* Chat window styles */
 #chatWindow {
-    border: 1px solid #ccc;
+    border: 3px solid #ccc;
     padding: 10px;
     height: 400px;
     overflow-y: auto;
@@ -55,13 +55,13 @@ body {
 
 /* Side panel for prompt */
 .side-panel {
-    width: 300px;
+    width: 350px;
     margin-left: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 3px solid #ccc;
     border-radius: 8px;
 }
 
