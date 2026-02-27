@@ -20,7 +20,6 @@ body {
 
 /* Chat window styles */
 #chatWindow {
-    border: 1px solid #ccc;
     padding: 10px;
     height: 400px;
     overflow-y: auto;
@@ -29,7 +28,6 @@ body {
     padding-right: 40px;
     gap: 8px;
     margin-bottom: 10px;
-    border-radius: 8px;
     width: 100%;
     margin-left: auto;
 }
