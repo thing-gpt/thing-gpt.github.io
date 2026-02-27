@@ -111,7 +111,7 @@
       addMessage("system", "Error: Failed to load API key from initial URL. Please try refreshing the page.");
     }
 
-    let conversationHistory = JSON.parse(localStorage.getItem("chatHistorySG")) || [];
+    let conversationHistory = JSON.parse(localStorage.getItem("chatHistoryNew")) || [];
     let aiPrompt = localStorage.getItem("aiPrompt") || "";
     renderHistory(conversationHistory);
 
@@ -167,7 +167,7 @@
     });
 
     clearBtn.addEventListener("click", () => {
-      localStorage.removeItem("chatHistorySG");
+      localStorage.removeItem("chatHistoryNew");
       localStorage.removeItem("aiPrompt");
       conversationHistory = [];
       aiPrompt = "";
@@ -179,7 +179,7 @@
       const msg = { role, content };
       conversationHistory.push(msg);
       console.log(`Adding message - Role: ${role}, Content: ${content}`);
-      localStorage.setItem("chatHistorySG", JSON.stringify(conversationHistory));
+      localStorage.setItem("chatHistoryNew", JSON.stringify(conversationHistory));
       chatWindow.appendChild(createMessageBubble(msg));
       chatWindow.scrollTop = chatWindow.scrollHeight;
       try {
