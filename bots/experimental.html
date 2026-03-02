@@ -216,13 +216,13 @@
       return div;
     }
       document.getElementById("settingsBtn").addEventListener("click", () => {
-        disclaimerOverlay.style.display = "block";
+        settingsOverlay.style.display = "block";
         chatWindow.style.pointerEvents = "auto";
         chatWindow.style.opacity = "1";
 
       });
     document.getElementById("dismissSettings").addEventListener("click", () => {
-        disclaimerOverlay.style.display = "none";
+        settingsOverlay.style.display = "none";
         chatWindow.style.pointerEvents = "auto";
         chatWindow.style.opacity = "1";
         document.querySelectorAll('.side-panel, .input-section').forEach(el => {
