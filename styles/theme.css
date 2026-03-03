@@ -231,3 +231,14 @@ em {
     #settingsContent button:hover {
       background-color: #45a049;
     }
+    .settingsBtn {
+        position: absolute;
+        margin-top: 5px;
+        margin-left: 5px;
+        background: #717171;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
