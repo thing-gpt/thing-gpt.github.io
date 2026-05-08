@@ -101,6 +101,12 @@
         const { error } = await supabaseClient
           .from("ChatLogz")
           .insert([{ user_id, message }]);
+          if (document.visibilityState === "visible") {
+            document.title = "MVChat";
+            } else {
+            document.title = "Someone Responded!";
+        ding.play();
+        }
         if (error) {
           console.error("Insert error:", error);
         }
