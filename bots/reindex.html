@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<head>
+<title>censor!!!</title>
+
+</head>
+<style>
+
+.question {
+  margin: 0.4rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+input {
+    width: 180px;
+}
+</style>
+<body>
+    <div class="question">
+        <label for="name" id="label">What is the stories name?:</label>
+        <div class="input">
+        <input type="text" id="name" name="name"/>
+        <button id="namesubmit" >submit</button>
+        </div>
+    </div>
+    <p id="story">story will go here</p>
+</body>
+<script type="module">
+    import OpenAI from "https://esm.sh/openai";
+    import Groq from "https://esm.sh/groq-sdk";
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    const client = new OpenAI({
+        apiKey: "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", dangerouslyAllowBrowser: true,
+        baseURL: "https://api.groq.com/openai/v1",
+    });
+
+    async function askAI(message) {
+        const response = await client.responses.create({
+            model: "llama-3.3-70b-versatile",
+            input: "write a short story. add line breaks using <br> and everything. make it based off these key words:" + JSON.stringify(message),
+        });
+        console.log(response.output_text);
+        story.innerHTML = response.output_text
+    }
+    let incre = 0;
+    let keyword = {
+
+    };
+    const label = document.getElementById("label")
+    const name = document.getElementById("name");
+    const namesubmit = document.getElementById("namesubmit");
+    const story = document.getElementById("story")
+    async function makeQuestion() {
+        if (incre == 1) {
+            keyword["story name"] = name.value;
+            console.log(name.value)
+            label.textContent = "What's the main character's name?"
+        } else if (incre == 2) {
+            keyword["main character"] = name.value;
+            console.log(name.value)
+            label.textContent = "What's the genre of the story?"
+        } else if (incre == 3) {
+            keyword["genre"] = name.value;
+            console.log(name.value)
+            label.textContent = "Is there an antagonist to this story? Y/N"
+        } else if (incre == 4) {
+            
+            if (name.value == "Y") {
+                label.textContent = "What is their name and motives? (plus whatever else)"
+            } else {
+                keyword["antagonist"] = "no antagonist";
+                console.log(name.value)
+                label.textContent = "What is the problem of the story then?"
+            }
+        } else if (incre == 5) {
+            if (label.textContent == "What is their name and motives? (plus whatever else)") {
+                keyword["antagonist + motives"] = name.value;
+                console.log(name.value)
+            } else {
+                keyword["problem"] = name.value;
+                console.log(name.value)
+            }
+            label.textContent = "How should the story end?"
+        } else if (incre == 6) {
+            keyword["ending"] = name.value;
+            console.log(name.value)
+            label.textContent = "Anything else?"
+        } else if (incre == 7) {
+            keyword["anything else"] = name.value;
+            console.log(name.value)
+            console.log(keyword)
+            label.textContent = "cool alright thanks (press enter or submit to restart)"
+            askAI(keyword)
+        } else if (incre == 8) {
+            keyword = ""
+            incre = 0;
+            story.innerHTML = "";
+            label.textContent = "What is the stories name?:"
+            
+        }
+    }
+
+
+    name.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            namesubmit.click()
+        }
+      });
+    namesubmit.addEventListener("click", function (event)  {
+        incre++;
+        makeQuestion()
+        name.value = ""
+    });
+
+
+</script>
+</html>
